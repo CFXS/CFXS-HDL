@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.ui": "xml",
+        "*.qrc": "xml",
+        "*.xrt": "cpp"
+    }
+}

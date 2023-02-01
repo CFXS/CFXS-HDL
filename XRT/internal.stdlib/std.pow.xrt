@@ -1,5 +1,0 @@
-namespace std {
-
-    extern unsigned pow(unsigned base, unsigned power);
-
-}

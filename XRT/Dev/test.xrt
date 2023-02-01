@@ -1,0 +1,28 @@
+#include "std/clockable"
+#include "std/pow"
+
+namespace CFXS {
+
+    template<bool CLOCK_EDGE = true, bool POLARITY = true, unsigned CASCADE_INDEX>
+    component CascadeClockDivider : std::clockable {
+        using CASCADE_POWER = std::pow(2, CASCADE_INDEX);
+
+    ports:
+        out logic div_clock;
+
+    registers:
+        unsigned<std::range_of(CASCADE_POWER)> reg_Counter = 0;
+
+    implementation:
+        CascadeClockDivider() {
+            div_clock = reg_Counter(CASCADE_INDEX - 1);
+        }
+
+        Event<clock>(EventSource e) {
+            if (e.clock && e.clock.edge == CLOCK_EDGE) {
+                reg_Counter++;
+            }
+        }
+    };
+
+} // namespace CFXS

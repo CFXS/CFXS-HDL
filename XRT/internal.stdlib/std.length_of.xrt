@@ -1,7 +1,0 @@
-namespace std {
-
-    // Get number of bits required to represent value of x
-    template<typename T>
-    extern unsigned length_of(T x);
-
-} // namespace std
