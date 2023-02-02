@@ -10,7 +10,7 @@ namespace XRT {
         Tokenizer()  = default;
         ~Tokenizer() = default;
 
-        void Tokenize(const std::string& source, std::filesystem::path* filePath);
+        std::vector<std::unique_ptr<Token>> Tokenize(const std::string& source, const std::filesystem::path* filePath);
     };
 
 } // namespace XRT

@@ -23,6 +23,7 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 #pragma warning(pop)
+#include "LoggerOverloads.hpp"
 
 class Logger {
 public:
@@ -35,18 +36,6 @@ public:
 private:
     static std::shared_ptr<spdlog::logger> s_CoreLogger;
 };
-
-// template<>
-// struct fmt::formatter<QString> {
-//     constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
-//         return ctx.end();
-//     }
-
-//     template<typename FormatContext>
-//     auto format(const QString& input, FormatContext& ctx) -> decltype(ctx.out()) {
-//         return format_to(ctx.out(), "{}", input.toStdString());
-//     }
-// };
 
 // Core log macros
 #define LOG_TRACE(...)    ::Logger::GetCoreLogger()->trace(__VA_ARGS__)

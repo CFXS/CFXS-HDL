@@ -26,7 +26,7 @@ target_precompile_headers(
   <algorithm>
   <unordered_map>
   <chrono>
-  <array> 
+  <array>
   <ostream>
   <sstream>
   <unordered_set>
@@ -34,28 +34,33 @@ target_precompile_headers(
   <cstdint>
   <cstddef>
   <cstdlib>
+  <regex/ctre.hpp>
 )
 
 if(WIN32)
   target_compile_definitions(${EXE_NAME} PRIVATE "CFXS_PLATFORM_WINDOWS")
+  target_compile_definitions(${EXE_NAME} PRIVATE "PATH_SEPARATOR='\\\\'")
 elseif(UNIX)
   target_compile_definitions(${EXE_NAME} PRIVATE "CFXS_PLATFORM_LINUX")
+  target_compile_definitions(${EXE_NAME} PRIVATE "PATH_SEPARATOR='/'")
 else()
   message(FATAL_ERROR "Unsupported platform")
 endif()
 
 target_include_directories(${EXE_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+target_include_directories(${EXE_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/vendor")
 
 if(MSVC)
   target_compile_options(${EXE_NAME} PRIVATE "/MP")
   target_compile_options(${EXE_NAME} PRIVATE "/GL")
+
   # target_link_options(${EXE_NAME} PRIVATE "/LTCG")
 endif()
 
 target_link_libraries(
   ${EXE_NAME}
   PRIVATE project_options
-          project_warnings
+  project_warnings
 )
 
 if(BUILD_PROFILER)

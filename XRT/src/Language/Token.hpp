@@ -25,7 +25,7 @@ namespace XRT {
               size_t entrySize,
               size_t line,
               size_t column,
-              std::filesystem::path* filePath);
+              const std::filesystem::path* filePath);
         ~Token();
 
         std::string GetValue_utf8();
@@ -47,9 +47,10 @@ namespace XRT {
         }
 
         void Print();
+        std::string PrintToString();
 
     private:
-        std::filesystem::path* m_FilePath;
+        const std::filesystem::path* m_FilePath;
         std::wstring m_Value;
         TokenType m_Type;
         size_t m_EntrySize;

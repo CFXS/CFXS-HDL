@@ -5,7 +5,10 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/XRT/XRT.exe",
-            "args": [],
+            "args": [
+                "\"${workspaceFolder}/XRT/Dev/*.xrt\"",
+                "\"${workspaceFolder}/XRT/src/libXRT/*.xrt\"",
+            ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

@@ -1,8 +1,8 @@
 namespace std {
 
-    component clockable {
-    ports:
-        in logic clock;
+    abstract component clockable {
+    implementation:
+        clockable(in logic clock);
     };
 
 } // namespace std

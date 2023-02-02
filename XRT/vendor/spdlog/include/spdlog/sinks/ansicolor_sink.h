@@ -56,13 +56,13 @@ public:
 
     // Foreground colors
     const string_view_t black = "\033[30m";
-    const string_view_t red = "\033[31m";
-    const string_view_t green = "\033[32m";
-    const string_view_t yellow = "\033[33m";
-    const string_view_t blue = "\033[34m";
-    const string_view_t magenta = "\033[35m";
-    const string_view_t cyan = "\033[36m";
-    const string_view_t white = "\033[37m";
+    const string_view_t red = "\u001b[31;1m";
+    const string_view_t green = "\u001b[32;1m";
+    const string_view_t yellow = "\u001b[33;1m";
+    const string_view_t blue = "\u001b[34;1m";
+    const string_view_t magenta = "\u001b[35;1m";
+    const string_view_t cyan = "\u001b[36;1m";
+    const string_view_t white = "\u001b[37;1m";
 
     /// Background colors
     const string_view_t on_black = "\033[40m";

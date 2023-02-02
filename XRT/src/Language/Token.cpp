@@ -23,7 +23,7 @@ namespace XRT {
                  size_t entrySize,
                  size_t line,
                  size_t column,
-                 std::filesystem::path* filePath) :
+                 const std::filesystem::path* filePath) :
         m_FilePath(filePath), m_Value(currentValue), m_Type(type), m_EntrySize(entrySize), m_Line(line), m_Column(column) {
     }
 
@@ -40,6 +40,15 @@ namespace XRT {
         LOG_TRACE("    | '{}'", TokenTypeToString(m_Type));
         LOG_TRACE("    | '{}'", GetEntrySize());
         LOG_TRACE("    | \"{}:{}:{}\"", m_FilePath->string(), GetLine(), GetColumn());
+    }
+
+    std::string Token::PrintToString() {
+        std::stringstream ss;
+        fmt::print(ss, "    | '{}'\n", GetValue_utf8());
+        fmt::print(ss, "    | '{}'\n", TokenTypeToString(m_Type));
+        fmt::print(ss, "    | '{}'\n", GetEntrySize());
+        fmt::print(ss, "    | \"{}:{}:{}\"", m_FilePath->string(), GetLine(), GetColumn());
+        return ss.str();
     }
 
 } // namespace XRT
