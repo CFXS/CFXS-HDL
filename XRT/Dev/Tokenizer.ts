@@ -34,6 +34,7 @@ const s_Identifiers: string[] = [
     "typename",
     "include",
     "using",
+    "constexpr",
 ].sort()
 
 const regex_Literal = /^[a-zA-Z_$][a-zA-Z_$0-9]*$/
@@ -72,10 +73,6 @@ export class Tokenizer {
     Tokenize(content: string, sourceLocation: SourceLocation) {
         TOKENIZER_LOG(`Process source "${sourceLocation.file_name}" (${sourceLocation.file_path})`)
 
-        const SEGMENT_VALUE = 0
-        const SEGMENT_TYPE = 1
-        const SEGMENT_LOCATION = 2
-
         // end padding for single position lookahead and remove carriage returns
         content = content.replace(/\r/g, "") + " "
         const contentLen = content.length
@@ -92,7 +89,7 @@ export class Tokenizer {
 
         var tokenPos = 0
         var lineNumber = 1
-        var linePos = 0
+        var lineOffset = 0
         var lastLinePos = 0
 
         if (!regex_Whitespace.test(content.charAt(0))) {
@@ -100,7 +97,7 @@ export class Tokenizer {
             tokenStartIndex = 0
             tokenStartLine = 1
             tokenStartColumn = 0
-            linePos = 1
+            lineOffset = 1
             tokenPos = 1
         }
 
@@ -109,11 +106,11 @@ export class Tokenizer {
 
             tokenPos++
             if (c === "\n") {
-                lastLinePos = linePos
-                linePos = 1
+                lastLinePos = lineOffset
+                lineOffset = 1
                 lineNumber++
             } else {
-                linePos++
+                lineOffset++
             }
 
             if (tokenActive) {
@@ -127,13 +124,13 @@ export class Tokenizer {
                         commentActive = true
                         tokenStartIndex = tokenPos - 1
                         tokenStartLine = lineNumber
-                        tokenStartColumn = linePos - 1
+                        tokenStartColumn = lineOffset - 1
                     } else if (is_string_start) {
                         stringActive = true
                         currentValue = c
                         tokenStartIndex = tokenPos - 1
                         tokenStartLine = lineNumber
-                        tokenStartColumn = linePos - 1
+                        tokenStartColumn = lineOffset - 1
                         continue
                     }
                 }
@@ -178,15 +175,16 @@ export class Tokenizer {
                                 type: TokenType.PUNCTUATOR,
                                 entry_size: 1,
                                 line: lineNumber,
-                                column: linePos - 1
+                                column: lineOffset - 1
                             })
                             currentValue = ""
                         } else {
                             segments.push(<Token>{
-                                value: c, type: TokenType.PUNCTUATOR,
+                                value: c,
+                                 type: TokenType.PUNCTUATOR,
                                 entry_size: 1,
                                 line: lineNumber,
-                                column: linePos - 1
+                                column: lineOffset - 1
                             })
                         }
                         tokenActive = false
@@ -215,15 +213,15 @@ export class Tokenizer {
                     tokenActive = true
                     tokenStartIndex = tokenPos
                     tokenStartLine = lineNumber
-                    tokenStartColumn = linePos
+                    tokenStartColumn = lineOffset
 
                     i--
                     tokenPos--
                     if (c === "\n") {
-                        linePos--
+                        lineOffset--
                         lineNumber--
                     } else {
-                        linePos--
+                        lineOffset--
                     }
                 }
             }

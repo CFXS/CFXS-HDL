@@ -1,0 +1,29 @@
+{
+    "version": 4,
+    "configurations": [
+        {
+            "name": "CFXS XRT",
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "signals="
+            ],
+            "windowsSdkVersion": "10.0.18362.0",
+            "compilerPath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.25.28610\\bin\\Hostx64\\x86\\cl.exe",
+            "includePath": [
+                "${workspaceFolder}/XRT/src/",
+                "${workspaceFolder}/XRT/vendor/",
+                "${workspaceFolder}/XRT/vendor/spdlog/include"
+            ],
+            "forcedInclude": [
+                "${workspaceFolder}/build/XRT/CMakeFiles/XRT.dir/cmake_pch.hxx"
+            ],
+            "cStandard": "c11",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "windows-msvc-x64",
+            "configurationProvider": "ms-vscode.cmake-tools",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+        }
+    ]
+}

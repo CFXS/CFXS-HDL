@@ -19,7 +19,7 @@ namespace CFXS {
         }
 
         Event<clock>(EventSource e) {
-            if (e.clock && e.clock.edge == CLOCK_EDGE) {
+            if (e.clock && clock == CLOCK_EDGE) {
                 reg_Counter++;
             }
         }
