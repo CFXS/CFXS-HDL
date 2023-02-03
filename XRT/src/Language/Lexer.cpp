@@ -17,8 +17,7 @@
 #define REGEX_KEYWORD \
     "all|namespace|component|abstract|registers|implementation|extern|static_assert|in|out|inout|if|else|for|template|typename|include|using|range|length"
 
-#define CREATE_TOKEN(type, value) \
-    m_Tokens.emplace_back(new Token(type, value, (reinterpret_cast<size_t>(value.data()) - sourceBaseAddress) / sizeof(wchar_t), 0, 0));
+#define CREATE_TOKEN(type, value) m_Tokens.emplace_back(new Token(type, value, currentOffset, 0, 0));
 #define CHECK_MATCH(type, rx)                                                                                                \
     for (auto match : ctre::multiline_tokenize<rx>(sourceContent)) {                                                         \
         if (match) {                                                                                                         \
@@ -41,6 +40,7 @@
             } else {                                                                                                         \
                 CREATE_TOKEN(type, matchView);                                                                               \
             }                                                                                                                \
+            currentOffset += matchView.size();                                                                               \
             sourceContent = std::wstring_view{matchView.data() + matchView.size(), sourceContent.size() - matchView.size()}; \
         }                                                                                                                    \
     }
@@ -59,8 +59,8 @@ namespace XRT {
 
         ScopeExecTime xt("v2");
 
-        auto sourceContent       = GetSource()->GetContent();
-        size_t sourceBaseAddress = reinterpret_cast<size_t>(sourceContent.data());
+        auto sourceContent   = GetSource()->GetContent();
+        size_t currentOffset = 0;
 
         while (1 < 2) {
             bool found = false;
@@ -124,8 +124,7 @@ namespace XRT {
         for (auto tok : m_Tokens) {
             LOG_TRACE("[{}]", TokenTypeToString(tok->type));
             LOG_TRACE(" - '{}'", StringUtils::utf16_to_utf8(tok->type == TokenType::SPACE ? std::wstring_view{} : tok->value));
-            LOG_TRACE(" - #{}", tok->value.size());
-            LOG_TRACE(" - \"{}:{}:{}/{}\"", GetSource()->GetPath(), tok->line, tok->column, tok->offset);
+            LOG_TRACE(" - \"{}:{}:{}\"", GetSource()->GetPath(), tok->line, tok->column);
         }
     }
 
