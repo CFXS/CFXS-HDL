@@ -1,8 +1,8 @@
-#include "Language/Token.hpp"
+#include "Language/Lexer.hpp"
+#include "Language/SourceEntry.hpp"
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #include <iostream>
 #include <Log/Logger.hpp>
-#include <Language/Tokenizer.hpp>
 #include <filesystem>
 #include <fstream>
 #include <StringUtils.hpp>
@@ -12,6 +12,8 @@
 
 using argparse::ArgumentParser;
 namespace fs = std::filesystem;
+
+void Test(const std::string& source, const std::filesystem::path& sourcePath);
 
 int main(int argc, char** argv) {
     Logger::Initialize();
@@ -90,90 +92,50 @@ int main(int argc, char** argv) {
             return -1;
         }
 
-        auto tok = new XRT::Tokenizer;
-        try {
-            auto tokens = tok->Tokenize(source, &sourcePath);
-            // for (const auto& t : tokens) {
-            // t->Print();
-            // }
-            std::string hl = "";
-            size_t line    = 1;
-            size_t col     = 0;
-            for (size_t i = 0; i < source.size(); i++) {
-                if (source[i] == '\n') {
-                    line++;
-                    col = 0;
-                    hl += "\n";
-                    continue;
-                } else {
-                    col++;
-                }
-                std::string color = ANSI_RESET;
-
-                std::string type = "???";
-                for (const auto& t : tokens) {
-                    if (t->GetLine() == line && col >= t->GetColumn() && col < (t->GetColumn() + t->GetEntrySize())) {
-                        switch (t->GetType()) {
-                            case XRT::TokenType::KEYWORD:
-                                type  = "KEYWORD";
-                                color = ANSI_BLUE;
-                                break;
-                            case XRT::TokenType::IDENTIFIER: {
-                                type     = "IDENTIFIER";
-                                auto val = t->GetValue_utf8();
-                                if (ctre::match<"bool|unsigned|true|false|unsigned|logic">(val.begin(), val.end())) {
-                                    color = ANSI_MAGENTA;
-                                } else if (ctre::match<"std|range_of|CFXS|EventSource|pow|is_integral|clockable|Event">(val.begin(),
-                                                                                                                        val.end())) {
-                                    color = "\u001b[33m";
-                                } else if (ctre::match<"CascadeClockDivider">(val.begin(), val.end())) {
-                                    color = ANSI_GREEN;
-                                } else {
-                                    color = ANSI_RESET;
-                                }
-                                break;
-                            }
-                            case XRT::TokenType::INVALID_IDENTIFIER:
-                                type  = "INVALID_IDENTIFIER";
-                                color = ANSI_RED;
-                                break;
-                            case XRT::TokenType::LITERAL:
-                                type  = "LITERAL";
-                                color = ANSI_CYAN;
-                                break;
-                            case XRT::TokenType::INVALID_LITERAL:
-                                type  = "INVALID_LITERAL";
-                                color = ANSI_RED;
-                                break;
-                            case XRT::TokenType::OPERATOR:
-                                type  = "OPERATOR";
-                                color = ANSI_YELLOW;
-                                break;
-                            case XRT::TokenType::PUNCTUATOR:
-                                type  = "PUNCTUATOR";
-                                color = ANSI_GRAY;
-                                break;
-                            case XRT::TokenType::COMMENT:
-                                type  = "COMMENT";
-                                color = ANSI_DARK_GREEN;
-                                break;
-                        }
-                        break;
-                    }
-                }
-
-                // hl += color + "[ " + type + " | " + source[i] + " ]\n" + ANSI_RESET;
-                hl += color + source[i] + ANSI_RESET;
-            }
-
-            LOG_TRACE("\n{}", hl);
-
-        } catch (const XRT::TokenizerException& e) {
-            LOG_TRACE(e.GetReason());
-        } catch (std::exception* e) {
-            LOG_CRITICAL("Tokenize error: {}", e->what());
-        }
+        Test(source, sourcePath);
     }
 
     return 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Test(const std::string& source, const std::filesystem::path& sourcePath) {
+    auto src = std::make_shared<XRT::SourceEntry>(StringUtils::utf8_to_utf16(source), sourcePath);
+
+    XRT::Lexer lex(src);
+    auto& tokens = lex.GetTokens();
+
+    std::string out;
+    for (const auto& tok : tokens) {
+        auto content      = StringUtils::utf16_to_utf8(std::wstring(tok->value));
+        std::string color = ANSI_RESET;
+        switch (tok->type) {
+            case XRT::Lexer::TokenType::KEYWORD: color = ANSI_BLUE; break;
+            case XRT::Lexer::TokenType::IDENTIFIER: {
+                if (ctre::match<"bool|unsigned|true|false|unsigned|logic">(content)) {
+                    color = ANSI_MAGENTA;
+                } else if (ctre::match<"std|range_of|EventSource|CFXS|pow|is_integral|clockable|Event">(content)) {
+                    color = "\u001b[33m";
+                } else if (ctre::match<"CascadeClockDivider">(content)) {
+                    color = ANSI_GREEN;
+                } else {
+                    color = ANSI_RESET;
+                }
+                break;
+            }
+            case XRT::Lexer::TokenType::STRING_LITERAL: color = ANSI_CYAN; break;
+            case XRT::Lexer::TokenType::LITERAL: color = ANSI_CYAN; break;
+            case XRT::Lexer::TokenType::OPERATOR: color = ANSI_YELLOW; break;
+            case XRT::Lexer::TokenType::PUNCTUATOR: color = ANSI_GRAY; break;
+            case XRT::Lexer::TokenType::COMMENT: color = ANSI_DARK_GREEN; break;
+            case XRT::Lexer::TokenType::SPACE: break;
+            case XRT::Lexer::TokenType::UNKNOWN: color = ANSI_RED; break;
+        }
+
+        out += color + content + ANSI_RESET;
+    }
+    LOG_TRACE("\n{}", out);
 }

@@ -1,3 +1,4 @@
+// comment
 namespace std {
 
     // Check if type is integral (signed, unsigned, fixed<>)

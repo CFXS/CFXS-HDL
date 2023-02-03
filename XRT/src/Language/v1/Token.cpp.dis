@@ -4,20 +4,6 @@
 
 namespace XRT {
 
-    static std::string TokenTypeToString(TokenType t) {
-        switch (t) {
-            case TokenType::KEYWORD: return "KEYWORD";
-            case TokenType::IDENTIFIER: return "IDENTIFIER";
-            case TokenType::INVALID_IDENTIFIER: return "INVALID_IDENTIFIER";
-            case TokenType::LITERAL: return "LITERAL";
-            case TokenType::INVALID_LITERAL: return "INVALID_LITERAL";
-            case TokenType::OPERATOR: return "OPERATOR";
-            case TokenType::PUNCTUATOR: return "PUNCTUATOR";
-            case TokenType::COMMENT: return "COMMENT";
-            default: return "???";
-        }
-    }
-
     Token::Token(const std::wstring& currentValue,
                  TokenType type,
                  size_t entrySize,

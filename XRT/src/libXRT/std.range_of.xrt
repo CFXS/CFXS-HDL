@@ -1,7 +1,0 @@
-namespace std {
-
-    // Get bit range required to represent value of x
-    template<typename T, static_assert(std::is_integral<T>(), "T is not an integral type")>
-    extern std::range length_of(T x);
-
-} // namespace std

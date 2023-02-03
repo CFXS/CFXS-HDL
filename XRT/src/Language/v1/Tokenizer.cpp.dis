@@ -26,8 +26,7 @@ namespace XRT {
     }
 
     std::vector<std::unique_ptr<Token>> Tokenizer::Tokenize(const std::string& _source, const std::filesystem::path* filePath) {
-        LOG_TRACE("Tokenize {}", filePath->filename());
-        ScopeExecTime xt("Tokenize");
+        ScopeExecTime xt("v1");
 
         std::wstring source = StringUtils::utf8_to_utf16(_source + " ");
         source.erase(std::remove(source.begin(), source.end(), (wchar_t)'\r'), source.end());
@@ -81,7 +80,8 @@ namespace XRT {
                     } else if (ctre::match<REGEX_RANGE_LITERAL>(value.begin(), value.end())) {
                         tokens.emplace_back(new Token(value, TokenType::LITERAL, size, line, column, filePath));
                     } else {
-                        auto token = new Token(value, TokenType::INVALID_LITERAL, size, line, column, filePath);
+                        // INVALID_LITERAL
+                        auto token = new Token(value, TokenType::LITERAL, size, line, column, filePath);
                         std::stringstream ss;
                         fmt::print(ss, "Invalid literal: \"{}\"\n{}", StringUtils::utf16_to_utf8(value), token->PrintToString());
                         throw TokenizerException(ss.str());
@@ -210,8 +210,9 @@ namespace XRT {
                     tokens.emplace_back(new Token(
                         currentValue, TokenType::LITERAL, tokenPos - tokenStartIndex, tokenStartLine, tokenStartColumn, filePath));
                 } else {
+                    // INVALID_LITERAL
                     tokens.emplace_back(new Token(
-                        currentValue, TokenType::INVALID_LITERAL, tokenPos - tokenStartIndex, tokenStartLine, tokenStartColumn, filePath));
+                        currentValue, TokenType::LITERAL, tokenPos - tokenStartIndex, tokenStartLine, tokenStartColumn, filePath));
                 }
             } else {
                 addKeywordIdentifierLiteral(currentValue, tokenPos - tokenStartIndex, tokenStartLine, tokenStartColumn);

@@ -7,7 +7,7 @@ namespace CFXS {
         using CASCADE_POWER = std::pow(2, CASCADE_INDEX);
 
     registers:
-        unsigned<CASCADE_POWER..0> reg_Counter = 0;
+        unsigned<CASCADE_INDEX::range> reg_Counter = 0;
 
     implementation:
         CascadeClockDivider(out logic div_clock) {

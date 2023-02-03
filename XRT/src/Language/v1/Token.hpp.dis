@@ -5,17 +5,6 @@ namespace XRT {
 
     class Tokenizer;
 
-    enum class TokenType {
-        KEYWORD,
-        IDENTIFIER,
-        INVALID_IDENTIFIER,
-        LITERAL,
-        INVALID_LITERAL,
-        OPERATOR,
-        PUNCTUATOR,
-        COMMENT,
-    };
-
     class Token {
         friend class Tokenizer;
 

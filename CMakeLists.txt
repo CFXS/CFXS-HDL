@@ -12,7 +12,7 @@ if(STATIC_RUNTIME)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
-project(CFXS_L0_Debugger CXX C)
+project(XRT CXX C)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
