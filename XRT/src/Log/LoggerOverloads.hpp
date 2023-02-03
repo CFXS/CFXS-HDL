@@ -1,4 +1,5 @@
 #pragma once
+#include <string_view>
 #pragma warning(push, 0)
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
@@ -48,5 +49,29 @@ struct fmt::formatter<std::filesystem::path> {
     template<typename FormatContext>
     auto format(const std::filesystem::path& input, FormatContext& ctx) -> decltype(ctx.out()) {
         return format_to(ctx.out(), "{}", input.string());
+    }
+};
+
+template<>
+struct fmt::formatter<std::wstring> {
+    constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
+        return ctx.end();
+    }
+
+    template<typename FormatContext>
+    auto format(const std::wstring& input, FormatContext& ctx) -> decltype(ctx.out()) {
+        return format_to(ctx.out(), "{}", StringUtils::utf16_to_utf8(input));
+    }
+};
+
+template<>
+struct fmt::formatter<std::wstring_view> {
+    constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
+        return ctx.end();
+    }
+
+    template<typename FormatContext>
+    auto format(std::wstring_view input, FormatContext& ctx) -> decltype(ctx.out()) {
+        return format_to(ctx.out(), "{}", StringUtils::utf16_to_utf8(input));
     }
 };

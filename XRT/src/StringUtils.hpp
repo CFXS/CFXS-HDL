@@ -12,14 +12,15 @@
 
 class StringUtils {
 public:
-    static std::string utf16_to_utf8(const std::wstring& wstr) {
+    static std::string utf16_to_utf8(std::wstring_view wstrv) {
+        std::wstring wstr{wstrv};
         std::string retStr;
         if (!wstr.empty()) {
-            int sizeRequired = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
+            int sizeRequired = WideCharToMultiByte(CP_UTF8, 0, wstr.data(), -1, NULL, 0, NULL, NULL);
 
             if (sizeRequired > 0) {
                 std::vector<char> utf8String(sizeRequired);
-                int bytesConverted = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &utf8String[0], (int)utf8String.size(), NULL, NULL);
+                int bytesConverted = WideCharToMultiByte(CP_UTF8, 0, wstr.data(), -1, &utf8String[0], (int)utf8String.size(), NULL, NULL);
                 if (bytesConverted != 0) {
                     retStr = &utf8String[0];
                 } else {
@@ -30,7 +31,7 @@ public:
         return retStr;
     }
 
-    static std::wstring utf8_to_utf16(const std::string& utf8) {
+    static std::wstring utf8_to_utf16(std::string_view utf8) {
         std::vector<unsigned long> unicode;
         size_t i = 0;
         while (i < utf8.size()) {

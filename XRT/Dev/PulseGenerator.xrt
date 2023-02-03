@@ -31,5 +31,4 @@ namespace CFXS {
             }
         }
     };
-
 } // namespace CFXS

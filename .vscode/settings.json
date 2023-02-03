@@ -1,5 +1,10 @@
 {
     "C_Cpp.intelliSenseEngine": "disabled",
+    "clangd.arguments": [
+        "-j=8",
+        "--background-index",
+        "--pch-storage=memory"
+    ],
     "files.associations": {
         "*.ui": "xml",
         "*.qrc": "xml",

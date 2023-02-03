@@ -1,12 +1,12 @@
+#include <argparse/argparse.hpp> // C++ broken, this needs to be above Lexer
 #include "Language/Lexer.hpp"
 #include "Language/SourceEntry.hpp"
-#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
+#include <exception>
 #include <iostream>
 #include <Log/Logger.hpp>
 #include <filesystem>
 #include <fstream>
 #include <StringUtils.hpp>
-#include <argparse/argparse.hpp>
 #include <regex>
 #include <Log/ANSI.hpp>
 
@@ -106,6 +106,16 @@ void Test(const std::string& source, const std::filesystem::path& sourcePath) {
     auto src = std::make_shared<XRT::SourceEntry>(StringUtils::utf8_to_utf16(source), sourcePath);
 
     XRT::Lexer lex(src);
+
+    try {
+        lex.ProcessSource();
+        lex.PrintTokens();
+    } catch (const XRT::Lexer::UnknownTokenException& e) {
+        LOG_ERROR("[{}]:\n{}", e.what(), e.GetSource());
+    } catch (const std::exception& e) {
+        LOG_CRITICAL("{}", e.what());
+    }
+
     auto& tokens = lex.GetTokens();
 
     std::string out;
@@ -137,5 +147,5 @@ void Test(const std::string& source, const std::filesystem::path& sourcePath) {
 
         out += color + content + ANSI_RESET;
     }
-    LOG_TRACE("\n{}", out);
+    // LOG_TRACE("\n{}", out);
 }
