@@ -17,24 +17,10 @@ target_include_directories(${EXE_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/vend
 target_precompile_headers(
   ${EXE_NAME}
   PRIVATE
-  <iostream>
-  <vector>
-  <string>
-  <map>
-  <utility>
   <memory>
-  <algorithm>
-  <unordered_map>
-  <chrono>
-  <array>
-  <ostream>
-  <sstream>
-  <unordered_set>
-  <filesystem>
   <cstdint>
   <cstddef>
   <cstdlib>
-  <regex/ctre.hpp>
 )
 
 if(WIN32)

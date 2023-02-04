@@ -10,8 +10,8 @@ namespace CFXS {
              >
     component PulseGenerator : std::clockable {
     registers:
-        unsigned<PULSE_LENGTH::range> reg_Counter = 0;
-        logic reg_LastTrigger                     = !TRIGGER_EDGE;
+        unsigned<PULSE_LENGTH..> reg_Counter = 0;
+        logic reg_LastTrigger                = !TRIGGER_EDGE;
 
     implementation:
         PulseGenerator(in logic trigger, out logic output) {

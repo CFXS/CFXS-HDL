@@ -1,6 +1,6 @@
 #pragma once
-
 #include <filesystem>
+
 namespace XRT {
 
     class SourceEntry {

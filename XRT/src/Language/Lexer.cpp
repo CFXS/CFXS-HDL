@@ -6,6 +6,8 @@
 #include "Log/Logger.hpp"
 #include "ScopeExecTime.hpp"
 #include "StringUtils.hpp"
+#include <Log/ANSI.hpp>
+#include <regex/ctre.hpp>
 
 #define REGEX_WHITESPACE        "[ \t\r\n]+"
 #define REGEX_MULTILINE_COMMENT "\\/\\*[^*]*\\*+(?:[^\\/*][^*]*\\*+)*\\/"
@@ -57,7 +59,7 @@ namespace XRT {
             return;
         }
 
-        ScopeExecTime xt("v2");
+        ScopeExecTime xt("Lexer::ProcessSource");
 
         auto sourceContent   = GetSource()->GetContent();
         size_t currentOffset = 0;
@@ -112,6 +114,10 @@ namespace XRT {
                     column++;
                 }
             }
+
+            // Later lookahead padding
+            for (int i = 0; i < 16; i++)
+                m_Tokens.push_back(new Token(TokenType::END_OF_FILE, {}, content.size(), line, column));
         }
     }
 
@@ -122,9 +128,7 @@ namespace XRT {
         }
 
         for (auto tok : m_Tokens) {
-            LOG_TRACE("[{}]", TokenTypeToString(tok->type));
-            LOG_TRACE(" - '{}'", StringUtils::utf16_to_utf8(tok->type == TokenType::SPACE ? std::wstring_view{} : tok->value));
-            LOG_TRACE(" - \"{}:{}:{}\"", GetSource()->GetPath(), tok->line, tok->column);
+            tok->Print(GetSource()->GetPath());
         }
     }
 

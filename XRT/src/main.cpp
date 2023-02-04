@@ -1,5 +1,6 @@
 #include <argparse/argparse.hpp> // C++ broken, this needs to be above Lexer
 #include "Language/Lexer.hpp"
+#include "Language/Parser.hpp"
 #include "Language/SourceEntry.hpp"
 #include <exception>
 #include <iostream>
@@ -9,6 +10,7 @@
 #include <StringUtils.hpp>
 #include <regex>
 #include <Log/ANSI.hpp>
+#include <regex/ctre.hpp>
 
 using argparse::ArgumentParser;
 namespace fs = std::filesystem;
@@ -105,18 +107,30 @@ int main(int argc, char** argv) {
 void Test(const std::string& source, const std::filesystem::path& sourcePath) {
     auto src = std::make_shared<XRT::SourceEntry>(StringUtils::utf8_to_utf16(source), sourcePath);
 
-    XRT::Lexer lex(src);
+    auto lex = new XRT::Lexer(src);
 
     try {
-        lex.ProcessSource();
-        lex.PrintTokens();
+        lex->ProcessSource();
     } catch (const XRT::Lexer::UnknownTokenException& e) {
         LOG_ERROR("[{}]:\n{}", e.what(), e.GetSource());
     } catch (const std::exception& e) {
         LOG_CRITICAL("{}", e.what());
     }
 
-    auto& tokens = lex.GetTokens();
+    auto parser = new XRT::Parser;
+    try {
+        parser->Parse(lex);
+    } catch (const XRT::Parser::ParseException& e) {
+        LOG_ERROR("{}", e.what());
+    } catch (const std::exception& e) {
+        LOG_CRITICAL("{}", e.what());
+    }
+
+    auto& tokens     = parser->GetTokens();
+    lex->GetTokens() = tokens;
+    // lex->PrintTokens();
+
+    return;
 
     std::string out;
     for (const auto& tok : tokens) {
@@ -136,13 +150,18 @@ void Test(const std::string& source, const std::filesystem::path& sourcePath) {
                 }
                 break;
             }
+
             case XRT::Lexer::TokenType::STRING_LITERAL: color = ANSI_CYAN; break;
             case XRT::Lexer::TokenType::LITERAL: color = ANSI_CYAN; break;
-            case XRT::Lexer::TokenType::OPERATOR: color = ANSI_YELLOW; break;
             case XRT::Lexer::TokenType::PUNCTUATOR: color = ANSI_GRAY; break;
             case XRT::Lexer::TokenType::COMMENT: color = ANSI_DARK_GREEN; break;
             case XRT::Lexer::TokenType::SPACE: break;
             case XRT::Lexer::TokenType::UNKNOWN: color = ANSI_RED; break;
+            default: {
+                if ((int)tok->type > (int)XRT::Lexer::TokenType::__SPECIFIED__) {
+                    color = ANSI_YELLOW;
+                }
+            }
         }
 
         out += color + content + ANSI_RESET;
