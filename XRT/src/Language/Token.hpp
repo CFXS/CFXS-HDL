@@ -13,58 +13,61 @@ namespace XRT {
         PUNCTUATOR,
         COMMENT,
         __SPECIFIED__,
-        STRING_LITERAL,  // "string"
-        DECIMAL_LITERAL, // 1234
-        HEX_LITERAL,     // 0x1234
-        FLOAT_LITERAL,   // 1.234
-        TIME_LITERAL,    // 12ns
-        OPEN_ANGLE,      // <
-        CLOSE_ANGLE,     // >
-        OPEN_BRACKET,    // [
-        CLOSE_BRACKET,   // ]
-        OPEN_PAREN,      // (
-        CLOSE_PAREN,     // )
-        OPEN_SCOPE,      // {
-        CLOSE_SCOPE,     // }
-        __OPERATOR_START__,
-        OP_RESOLVE,           // ::
-        OP_NOT,               // !
-        OP_ADD,               // +
-        OP_SUB,               // -
-        OP_MUL,               // *
-        OP_DIV,               // /
-        OP_XOR,               // ^
-        OP_AND,               // &
-        OP_OR,                // |
-        OP_BOOL_AND,          // &&
-        OP_BOOL_OR,           // ||
-        OP_ASSIGN_ADD,        // +=
-        OP_ASSIGN_SUB,        // -=
-        OP_ASSIGN_MUL,        // *=
-        OP_ASSIGN_DIV,        // /=
-        OP_ASSIGN_AND,        // &=
-        OP_ASSIGN_OR,         // |=
-        OP_ASSIGN_XOR,        // ^=
-        OP_RANGE,             // ..
-        OP_INC,               // ++
-        OP_DEC,               // --
-        OP_EQUAL,             // ==
-        OP_NOT_EQUAL,         // !=
-        OP_GTEQ,              // >=
-        OP_LTEQ,              // <=
-        OP_LSL,               // <<
-        OP_LSR,               // >>
-        OP_ROL,               // <<<
-        OP_ROR,               // >>>
-        OP_LSL_RESIZE,        // <..< //? Extends resulting type on overflow
-        OP_LSR_RESIZE,        // >..> //? Shrinks resulting type on underflow
-        OP_ASSIGN_LSL,        // <<=
-        OP_ASSIGN_LSR,        // >>=
-        OP_ASSIGN_ROL,        // <<<=
-        OP_ASSIGN_ROR,        // >>>=
-        OP_ASSIGN_LSL_RESIZE, // <..<= //? Extends resulting type on overflow
-        OP_ASSIGN_LSR_RESIZE, // >..>= //? Shrinks resulting type on underflow
-        __OPERATOR_END__,
+        STRING_LITERAL,    // "string"
+        DECIMAL_LITERAL,   // 1234
+        HEX_LITERAL,       // 0x1234
+        FLOAT_LITERAL,     // 1.234
+        TIME_LITERAL,      // 12ns
+        ASSIGN,            // =
+        DOT,               // .
+        SEPARATOR,         // ;
+        OPEN_ANGLE,        // <
+        CLOSE_ANGLE,       // >
+        LT = OPEN_ANGLE,   // <
+        GT = CLOSE_ANGLE,  // >
+        OPEN_BRACKET,      // [
+        CLOSE_BRACKET,     // ]
+        OPEN_PAREN,        // (
+        CLOSE_PAREN,       // )
+        OPEN_SCOPE,        // {
+        CLOSE_SCOPE,       // }
+        NOT,               // !
+        ADD,               // +
+        SUB,               // -
+        MUL,               // *
+        DIV,               // /
+        XOR,               // ^
+        AND,               // &
+        OR,                // |
+        RESOLVE,           // ::
+        BOOL_AND,          // &&
+        BOOL_OR,           // ||
+        ASSIGN_ADD,        // +=
+        ASSIGN_SUB,        // -=
+        ASSIGN_MUL,        // *=
+        ASSIGN_DIV,        // /=
+        ASSIGN_AND,        // &=
+        ASSIGN_OR,         // |=
+        ASSIGN_XOR,        // ^=
+        RANGE,             // ..
+        INC,               // ++
+        DEC,               // --
+        EQUAL,             // ==
+        NOT_EQUAL,         // !=
+        GTEQ,              // >=
+        LTEQ,              // <=
+        LSL,               // <<
+        LSR,               // >>
+        ROL,               // <<<
+        ROR,               // >>>
+        LSL_RESIZE,        // <..< //? Extends resulting type on overflow
+        LSR_RESIZE,        // >..> //? Shrinks resulting type on underflow
+        ASSIGN_LSL,        // <<=
+        ASSIGN_LSR,        // >>=
+        ASSIGN_ROL,        // <<<=
+        ASSIGN_ROR,        // >>>=
+        ASSIGN_LSL_RESIZE, // <..<= //? Extends resulting type on overflow
+        ASSIGN_LSR_RESIZE, // >..>= //? Shrinks resulting type on underflow
         END_OF_FILE,
     };
 
@@ -94,8 +97,8 @@ inline std::string ToString(XRT::TokenType t) {
         case XRT::TokenType::SPACE: return "SPACE";
         case XRT::TokenType::STRING_LITERAL: return "STRING_LITERAL";
         case XRT::TokenType::OPEN_ANGLE: return "OPEN_ANGLE";
-        case XRT::TokenType::CLOSE_ANGLE: return "CLOSE_ANGLE";
-        case XRT::TokenType::OPEN_BRACKET: return "OPEN_BRACKET";
+        case XRT::TokenType::CLOSE_ANGLE: return "CLOSE_ANGLE/GT";
+        case XRT::TokenType::OPEN_BRACKET: return "OPEN_BRACKET/LT";
         case XRT::TokenType::CLOSE_BRACKET: return "CLOSE_BRACKET";
         case XRT::TokenType::OPEN_PAREN: return "OPEN_PAREN";
         case XRT::TokenType::CLOSE_PAREN: return "CLOSE_PAREN";
@@ -105,43 +108,45 @@ inline std::string ToString(XRT::TokenType t) {
         case XRT::TokenType::HEX_LITERAL: return "HEX_LITERAL";
         case XRT::TokenType::FLOAT_LITERAL: return "FLOAT_LITERAL";
         case XRT::TokenType::TIME_LITERAL: return "TIME_LITERAL";
-        case XRT::TokenType::OP_RESOLVE: return "OP_RESOLVE";
-        case XRT::TokenType::OP_NOT: return "OP_NOT";
-        case XRT::TokenType::OP_ADD: return "OP_ADD";
-        case XRT::TokenType::OP_SUB: return "OP_SUB";
-        case XRT::TokenType::OP_MUL: return "OP_MUL";
-        case XRT::TokenType::OP_DIV: return "OP_DIV";
-        case XRT::TokenType::OP_XOR: return "OP_XOR";
-        case XRT::TokenType::OP_AND: return "OP_AND";
-        case XRT::TokenType::OP_OR: return "OP_OR";
-        case XRT::TokenType::OP_BOOL_AND: return "OP_BOOL_AND";
-        case XRT::TokenType::OP_BOOL_OR: return "OP_BOOL_OR";
-        case XRT::TokenType::OP_ASSIGN_ADD: return "OP_ASSIGN_ADD";
-        case XRT::TokenType::OP_ASSIGN_SUB: return "OP_ASSIGN_SUB";
-        case XRT::TokenType::OP_ASSIGN_MUL: return "OP_ASSIGN_MUL";
-        case XRT::TokenType::OP_ASSIGN_DIV: return "OP_ASSIGN_DIV";
-        case XRT::TokenType::OP_ASSIGN_AND: return "OP_ASSIGN_AND";
-        case XRT::TokenType::OP_ASSIGN_OR: return "OP_ASSIGN_OR";
-        case XRT::TokenType::OP_ASSIGN_XOR: return "OP_ASSIGN_XOR";
-        case XRT::TokenType::OP_RANGE: return "OP_RANGE";
-        case XRT::TokenType::OP_INC: return "OP_INC";
-        case XRT::TokenType::OP_DEC: return "OP_DEC";
-        case XRT::TokenType::OP_EQUAL: return "OP_EQUAL";
-        case XRT::TokenType::OP_NOT_EQUAL: return "OP_NOT_EQUAL";
-        case XRT::TokenType::OP_GTEQ: return "OP_GTEQ";
-        case XRT::TokenType::OP_LTEQ: return "OP_LTEQ";
-        case XRT::TokenType::OP_LSL: return "OP_LSL";
-        case XRT::TokenType::OP_LSR: return "OP_LSR";
-        case XRT::TokenType::OP_ROL: return "OP_ROL";
-        case XRT::TokenType::OP_ROR: return "OP_ROR";
-        case XRT::TokenType::OP_LSL_RESIZE: return "OP_LSL_RESIZE";
-        case XRT::TokenType::OP_LSR_RESIZE: return "OP_LSR_RESIZE";
-        case XRT::TokenType::OP_ASSIGN_LSL: return "OP_ASSIGN_LSL";
-        case XRT::TokenType::OP_ASSIGN_LSR: return "OP_ASSIGN_LSR";
-        case XRT::TokenType::OP_ASSIGN_ROL: return "OP_ASSIGN_ROL";
-        case XRT::TokenType::OP_ASSIGN_ROR: return "OP_ASSIGN_ROR";
-        case XRT::TokenType::OP_ASSIGN_LSL_RESIZE: return "OP_ASSIGN_LSL_RESIZE";
-        case XRT::TokenType::OP_ASSIGN_LSR_RESIZE: return "OP_ASSIGN_LSR_RESIZE";
+        case XRT::TokenType::SEPARATOR: return "SEPARATOR";
+        case XRT::TokenType::RESOLVE: return "RESOLVE";
+        case XRT::TokenType::ASSIGN: return "ASSIGN";
+        case XRT::TokenType::NOT: return "NOT";
+        case XRT::TokenType::ADD: return "ADD";
+        case XRT::TokenType::SUB: return "SUB";
+        case XRT::TokenType::MUL: return "MUL";
+        case XRT::TokenType::DIV: return "DIV";
+        case XRT::TokenType::XOR: return "XOR";
+        case XRT::TokenType::AND: return "AND";
+        case XRT::TokenType::OR: return "OR";
+        case XRT::TokenType::BOOL_AND: return "BOOL_AND";
+        case XRT::TokenType::BOOL_OR: return "BOOL_OR";
+        case XRT::TokenType::ASSIGN_ADD: return "ASSIGN_ADD";
+        case XRT::TokenType::ASSIGN_SUB: return "ASSIGN_SUB";
+        case XRT::TokenType::ASSIGN_MUL: return "ASSIGN_MUL";
+        case XRT::TokenType::ASSIGN_DIV: return "ASSIGN_DIV";
+        case XRT::TokenType::ASSIGN_AND: return "ASSIGN_AND";
+        case XRT::TokenType::ASSIGN_OR: return "ASSIGN_OR";
+        case XRT::TokenType::ASSIGN_XOR: return "ASSIGN_XOR";
+        case XRT::TokenType::RANGE: return "RANGE";
+        case XRT::TokenType::INC: return "INC";
+        case XRT::TokenType::DEC: return "DEC";
+        case XRT::TokenType::EQUAL: return "EQUAL";
+        case XRT::TokenType::NOT_EQUAL: return "NOT_EQUAL";
+        case XRT::TokenType::GTEQ: return "GTEQ";
+        case XRT::TokenType::LTEQ: return "LTEQ";
+        case XRT::TokenType::LSL: return "LSL";
+        case XRT::TokenType::LSR: return "LSR";
+        case XRT::TokenType::ROL: return "ROL";
+        case XRT::TokenType::ROR: return "ROR";
+        case XRT::TokenType::LSL_RESIZE: return "LSL_RESIZE";
+        case XRT::TokenType::LSR_RESIZE: return "LSR_RESIZE";
+        case XRT::TokenType::ASSIGN_LSL: return "ASSIGN_LSL";
+        case XRT::TokenType::ASSIGN_LSR: return "ASSIGN_LSR";
+        case XRT::TokenType::ASSIGN_ROL: return "ASSIGN_ROL";
+        case XRT::TokenType::ASSIGN_ROR: return "ASSIGN_ROR";
+        case XRT::TokenType::ASSIGN_LSL_RESIZE: return "ASSIGN_LSL_RESIZE";
+        case XRT::TokenType::ASSIGN_LSR_RESIZE: return "ASSIGN_LSR_RESIZE";
         case XRT::TokenType::END_OF_FILE: return "END_OF_FILE";
         default: return "???";
     }
