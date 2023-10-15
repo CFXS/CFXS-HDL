@@ -17,7 +17,7 @@ namespace XRT {
             ParseException() {
             }
 
-            const char* what() const override {
+            const char* what() const noexcept override {
                 return "Parser::ParseException";
             }
         };
@@ -28,7 +28,7 @@ namespace XRT {
                 m_Reason = "Invalid operator" + StringUtils::utf16_to_utf8(value);
             }
 
-            const char* what() const override {
+            const char* what() const noexcept override {
                 return m_Reason.c_str();
             }
 

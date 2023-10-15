@@ -1,0 +1,44 @@
+[
+{
+  "directory": "/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build",
+  "command": "/usr/bin/clang++ -DCFXS_PLATFORM_LINUX -DCFXS_PROGRAM_NAME=\"\\\"CFXS XRT\\\"\" -DCFXS_VERSION_STRING=\\\"v0.1-dev\\\" -DPATH_SEPARATOR=\"'/'\" -D_CRT_SECURE_NO_WARNINGS -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/vendor/spdlog/include -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/vendor -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Winvalid-pch -fpch-instantiate-templates -Xclang -emit-pch -Xclang -include -Xclang /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT/CMakeFiles/XRT.dir/cmake_pch.hxx -x c++-header -o XRT/CMakeFiles/XRT.dir/cmake_pch.hxx.pch -c /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT/CMakeFiles/XRT.dir/cmake_pch.hxx.cxx",
+  "file": "/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT/CMakeFiles/XRT.dir/cmake_pch.hxx.cxx",
+  "output": "XRT/CMakeFiles/XRT.dir/cmake_pch.hxx.pch"
+},
+{
+  "directory": "/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build",
+  "command": "/usr/bin/clang++ -DCFXS_PLATFORM_LINUX -DCFXS_PROGRAM_NAME=\"\\\"CFXS XRT\\\"\" -DCFXS_VERSION_STRING=\\\"v0.1-dev\\\" -DPATH_SEPARATOR=\"'/'\" -D_CRT_SECURE_NO_WARNINGS -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/vendor/spdlog/include -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/vendor -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Winvalid-pch -Xclang -include-pch -Xclang /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT/CMakeFiles/XRT.dir/cmake_pch.hxx.pch -Xclang -include -Xclang /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT/CMakeFiles/XRT.dir/cmake_pch.hxx -o XRT/CMakeFiles/XRT.dir/src/main.cpp.o -c /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src/main.cpp",
+  "file": "/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src/main.cpp",
+  "output": "XRT/CMakeFiles/XRT.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build",
+  "command": "/usr/bin/clang++ -DCFXS_PLATFORM_LINUX -DCFXS_PROGRAM_NAME=\"\\\"CFXS XRT\\\"\" -DCFXS_VERSION_STRING=\\\"v0.1-dev\\\" -DPATH_SEPARATOR=\"'/'\" -D_CRT_SECURE_NO_WARNINGS -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/vendor/spdlog/include -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/vendor -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Winvalid-pch -Xclang -include-pch -Xclang /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT/CMakeFiles/XRT.dir/cmake_pch.hxx.pch -Xclang -include -Xclang /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT/CMakeFiles/XRT.dir/cmake_pch.hxx -o XRT/CMakeFiles/XRT.dir/src/Language/Lexer.cpp.o -c /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src/Language/Lexer.cpp",
+  "file": "/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src/Language/Lexer.cpp",
+  "output": "XRT/CMakeFiles/XRT.dir/src/Language/Lexer.cpp.o"
+},
+{
+  "directory": "/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build",
+  "command": "/usr/bin/clang++ -DCFXS_PLATFORM_LINUX -DCFXS_PROGRAM_NAME=\"\\\"CFXS XRT\\\"\" -DCFXS_VERSION_STRING=\\\"v0.1-dev\\\" -DPATH_SEPARATOR=\"'/'\" -D_CRT_SECURE_NO_WARNINGS -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/vendor/spdlog/include -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/vendor -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Winvalid-pch -Xclang -include-pch -Xclang /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT/CMakeFiles/XRT.dir/cmake_pch.hxx.pch -Xclang -include -Xclang /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT/CMakeFiles/XRT.dir/cmake_pch.hxx -o XRT/CMakeFiles/XRT.dir/src/Language/Parser.cpp.o -c /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src/Language/Parser.cpp",
+  "file": "/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src/Language/Parser.cpp",
+  "output": "XRT/CMakeFiles/XRT.dir/src/Language/Parser.cpp.o"
+},
+{
+  "directory": "/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build",
+  "command": "/usr/bin/clang++ -DCFXS_PLATFORM_LINUX -DCFXS_PROGRAM_NAME=\"\\\"CFXS XRT\\\"\" -DCFXS_VERSION_STRING=\\\"v0.1-dev\\\" -DPATH_SEPARATOR=\"'/'\" -D_CRT_SECURE_NO_WARNINGS -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/vendor/spdlog/include -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/vendor -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Winvalid-pch -Xclang -include-pch -Xclang /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT/CMakeFiles/XRT.dir/cmake_pch.hxx.pch -Xclang -include -Xclang /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT/CMakeFiles/XRT.dir/cmake_pch.hxx -o XRT/CMakeFiles/XRT.dir/src/Language/Token.cpp.o -c /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src/Language/Token.cpp",
+  "file": "/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src/Language/Token.cpp",
+  "output": "XRT/CMakeFiles/XRT.dir/src/Language/Token.cpp.o"
+},
+{
+  "directory": "/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build",
+  "command": "/usr/bin/clang++ -DCFXS_PLATFORM_LINUX -DCFXS_PROGRAM_NAME=\"\\\"CFXS XRT\\\"\" -DCFXS_VERSION_STRING=\\\"v0.1-dev\\\" -DPATH_SEPARATOR=\"'/'\" -D_CRT_SECURE_NO_WARNINGS -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/vendor/spdlog/include -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/vendor -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Winvalid-pch -Xclang -include-pch -Xclang /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT/CMakeFiles/XRT.dir/cmake_pch.hxx.pch -Xclang -include -Xclang /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT/CMakeFiles/XRT.dir/cmake_pch.hxx -o XRT/CMakeFiles/XRT.dir/src/StringUtils.cpp.o -c /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src/StringUtils.cpp",
+  "file": "/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src/StringUtils.cpp",
+  "output": "XRT/CMakeFiles/XRT.dir/src/StringUtils.cpp.o"
+},
+{
+  "directory": "/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build",
+  "command": "/usr/bin/clang++ -DCFXS_PLATFORM_LINUX -DCFXS_PROGRAM_NAME=\"\\\"CFXS XRT\\\"\" -DCFXS_VERSION_STRING=\\\"v0.1-dev\\\" -DPATH_SEPARATOR=\"'/'\" -D_CRT_SECURE_NO_WARNINGS -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/vendor/spdlog/include -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src -I/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/vendor -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Wunused -Woverloaded-virtual -Wpedantic -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2 -Winvalid-pch -Xclang -include-pch -Xclang /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT/CMakeFiles/XRT.dir/cmake_pch.hxx.pch -Xclang -include -Xclang /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build/XRT/CMakeFiles/XRT.dir/cmake_pch.hxx -o XRT/CMakeFiles/XRT.dir/src/Log/Logger.cpp.o -c /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src/Log/Logger.cpp",
+  "file": "/home/cfxs/Documents/Projects/CFXS/CFXS-HDL/XRT/src/Log/Logger.cpp",
+  "output": "XRT/CMakeFiles/XRT.dir/src/Log/Logger.cpp.o"
+}
+]

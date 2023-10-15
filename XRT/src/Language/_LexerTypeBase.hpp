@@ -16,7 +16,7 @@ namespace XRT {
             UnknownTokenException(std::wstring_view source) : m_Source(source) {
             }
 
-            const char* what() const override {
+            const char* what() const noexcept override {
                 return "Lexer::UnknownTokenException";
             }
 

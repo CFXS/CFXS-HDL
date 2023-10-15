@@ -14,7 +14,7 @@ namespace CFXS {
         logic reg_LastTrigger                = !TRIGGER_EDGE;
 
     implementation:
-        PulseGenerator(in logic trigger, out logic output) {
+        PulseGenerator(in<logic> trigger, out<logic> output) {
             output = reg_Counter == 0 ? IDLE_OUTPUT : !IDLE_OUTPUT;
         }
 

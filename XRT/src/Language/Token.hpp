@@ -13,61 +13,63 @@ namespace XRT {
         PUNCTUATOR,
         COMMENT,
         __SPECIFIED__,
-        STRING_LITERAL,    // "string"
-        DECIMAL_LITERAL,   // 1234
-        HEX_LITERAL,       // 0x1234
-        FLOAT_LITERAL,     // 1.234
-        TIME_LITERAL,      // 12ns
-        ASSIGN,            // =
-        DOT,               // .
-        SEPARATOR,         // ;
-        OPEN_ANGLE,        // <
-        CLOSE_ANGLE,       // >
-        LT = OPEN_ANGLE,   // <
-        GT = CLOSE_ANGLE,  // >
-        OPEN_BRACKET,      // [
-        CLOSE_BRACKET,     // ]
-        OPEN_PAREN,        // (
-        CLOSE_PAREN,       // )
-        OPEN_SCOPE,        // {
-        CLOSE_SCOPE,       // }
-        NOT,               // !
-        ADD,               // +
-        SUB,               // -
-        MUL,               // *
-        DIV,               // /
-        XOR,               // ^
-        AND,               // &
-        OR,                // |
-        RESOLVE,           // ::
-        BOOL_AND,          // &&
-        BOOL_OR,           // ||
-        ASSIGN_ADD,        // +=
-        ASSIGN_SUB,        // -=
-        ASSIGN_MUL,        // *=
-        ASSIGN_DIV,        // /=
-        ASSIGN_AND,        // &=
-        ASSIGN_OR,         // |=
-        ASSIGN_XOR,        // ^=
-        RANGE,             // ..
-        INC,               // ++
-        DEC,               // --
-        EQUAL,             // ==
-        NOT_EQUAL,         // !=
-        GTEQ,              // >=
-        LTEQ,              // <=
-        LSL,               // <<
-        LSR,               // >>
-        ROL,               // <<<
-        ROR,               // >>>
-        LSL_RESIZE,        // <..< //? Extends resulting type on overflow
-        LSR_RESIZE,        // >..> //? Shrinks resulting type on underflow
-        ASSIGN_LSL,        // <<=
-        ASSIGN_LSR,        // >>=
-        ASSIGN_ROL,        // <<<=
-        ASSIGN_ROR,        // >>>=
-        ASSIGN_LSL_RESIZE, // <..<= //? Extends resulting type on overflow
-        ASSIGN_LSR_RESIZE, // >..>= //? Shrinks resulting type on underflow
+        STRING_LITERAL,   // "string"
+        DECIMAL_LITERAL,  // 1234
+        HEX_LITERAL,      // 0x1234
+        FLOAT_LITERAL,    // 1.234
+        TIME_LITERAL,     // 12ns
+        ASSIGN,           // =
+        DOT,              // .
+        SEPARATOR,        // ;
+        OPEN_ANGLE,       // <
+        CLOSE_ANGLE,      // >
+        LT = OPEN_ANGLE,  // <
+        GT = CLOSE_ANGLE, // >
+        OPEN_BRACKET,     // [
+        CLOSE_BRACKET,    // ]
+        OPEN_PAREN,       // (
+        CLOSE_PAREN,      // )
+        OPEN_SCOPE,       // {
+        CLOSE_SCOPE,      // }
+        NOT,              // !
+        ADD,              // +
+        SUB,              // -
+        MUL,              // *
+        DIV,              // /
+        XOR,              // ^
+        AND,              // &
+        OR,               // |
+        RESOLVE,          // ::
+        BOOL_AND,         // &&
+        BOOL_OR,          // ||
+        ASSIGN_ADD,       // +=
+        ASSIGN_SUB,       // -=
+        ASSIGN_MUL,       // *=
+        ASSIGN_DIV,       // /=
+        ASSIGN_AND,       // &=
+        ASSIGN_OR,        // |=
+        ASSIGN_XOR,       // ^=
+        RANGE,            // ..
+        INC,              // ++
+        DEC,              // --
+        EQUAL,            // ==
+        NOT_EQUAL,        // !=
+        GTEQ,             // >=
+        LTEQ,             // <=
+        LSL,              // <<
+        LSR,              // >>
+        ROL,              // <<<
+        ROR,              // >>>
+        // LSL_RESIZE,        // <..< //? Extends resulting type on overflow
+        // LSR_RESIZE,        // >..> //? Shrinks resulting type on underflow
+        ASSIGN_LSL, // <<=
+        ASSIGN_LSR, // >>=
+        ASSIGN_ROL, // <<<=
+        ASSIGN_ROR, // >>>=
+        // ASSIGN_LSL_RESIZE, // <..<= //? Extends resulting type on overflow
+        // ASSIGN_LSR_RESIZE, // >..>= //? Shrinks resulting type on underflow
+        TERNARY_IF,
+        TERNARY_ELSE,
         END_OF_FILE,
     };
 
@@ -83,6 +85,16 @@ namespace XRT {
         size_t column;
 
         void Print(const std::filesystem::path& path);
+
+        static void* tok_malloc(size_t size);
+        static void tok_free(void* ptr);
+
+        void* operator new(size_t size) {
+            return tok_malloc(size);
+        }
+        void operator delete(void* p) {
+            tok_free(p);
+        }
     };
 
 } // namespace XRT
@@ -139,14 +151,16 @@ inline std::string ToString(XRT::TokenType t) {
         case XRT::TokenType::LSR: return "LSR";
         case XRT::TokenType::ROL: return "ROL";
         case XRT::TokenType::ROR: return "ROR";
-        case XRT::TokenType::LSL_RESIZE: return "LSL_RESIZE";
-        case XRT::TokenType::LSR_RESIZE: return "LSR_RESIZE";
+        // case XRT::TokenType::LSL_RESIZE: return "LSL_RESIZE";
+        // case XRT::TokenType::LSR_RESIZE: return "LSR_RESIZE";
         case XRT::TokenType::ASSIGN_LSL: return "ASSIGN_LSL";
         case XRT::TokenType::ASSIGN_LSR: return "ASSIGN_LSR";
         case XRT::TokenType::ASSIGN_ROL: return "ASSIGN_ROL";
         case XRT::TokenType::ASSIGN_ROR: return "ASSIGN_ROR";
-        case XRT::TokenType::ASSIGN_LSL_RESIZE: return "ASSIGN_LSL_RESIZE";
-        case XRT::TokenType::ASSIGN_LSR_RESIZE: return "ASSIGN_LSR_RESIZE";
+        // case XRT::TokenType::ASSIGN_LSL_RESIZE: return "ASSIGN_LSL_RESIZE";
+        // case XRT::TokenType::ASSIGN_LSR_RESIZE: return "ASSIGN_LSR_RESIZE";
+        case XRT::TokenType::TERNARY_IF: return "TERNARY_IF";
+        case XRT::TokenType::TERNARY_ELSE: return "TERNARY_ELSE";
         case XRT::TokenType::END_OF_FILE: return "END_OF_FILE";
         default: return "???";
     }

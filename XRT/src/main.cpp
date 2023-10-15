@@ -158,7 +158,7 @@ void Test(const std::string& source, const std::filesystem::path& sourcePath) {
             case XRT::Lexer::TokenType::SPACE: break;
             case XRT::Lexer::TokenType::UNKNOWN: color = ANSI_RED; break;
             default: {
-                if ((int)tok->type > (int)XRT::Lexer::TokenType::__SPECIFIED__) {
+                if (static_cast<int>(tok->type) > static_cast<int>(XRT::Lexer::TokenType::__SPECIFIED__)) {
                     color = ANSI_YELLOW;
                 }
             }

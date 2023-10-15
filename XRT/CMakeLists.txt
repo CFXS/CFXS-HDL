@@ -10,7 +10,7 @@ add_compile_definitions("_CRT_SECURE_NO_WARNINGS")
 add_compile_definitions("CFXS_VERSION_STRING=\"v0.1-dev\"")
 add_compile_definitions("CFXS_PROGRAM_NAME=\"CFXS XRT\"")
 
-add_executable(${EXE_NAME} ${headers} ${sources})
+add_executable(${EXE_NAME} ${sources})
 
 target_include_directories(${EXE_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog/include")
 
@@ -53,4 +53,6 @@ if(BUILD_PROFILER)
   target_link_options(${EXE_NAME} PRIVATE "/PROFILE")
 endif()
 
+if(WIN32)
 string(REGEX REPLACE "/W[3|4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+endif()

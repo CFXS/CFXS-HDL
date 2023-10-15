@@ -16,6 +16,22 @@
             "environment": [],
             "console": "externalTerminal",
             "visualizerFile": "c:\\Users\\CFXS\\AppData\\Roaming\\Code\\User\\workspaceStorage\\6812e7b5e42f5b13eeeb9f04f80fcc0e\\tonka3000.qtvsctools\\qt.natvis.xml"
+        },
+        {
+            "name": "(Linux) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/XRT/XRT",
+            "args": [
+                "\"${workspaceFolder}/XRT/Dev/*.xrt\"",
+                // "\"${workspaceFolder}/XRT/Dev/*.xrt\"",
+                // "\"${workspaceFolder}/XRT/src/libXRT/*.xrt\"",
+                // "\"${workspaceFolder}/XRT/src/libXRT/std.is_integral.xrt\"",
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "integratedTerminal",
         }
     ]
 }

@@ -24,35 +24,36 @@ namespace XRT {
     };
     static constexpr auto MAX_OP_SEQUENCE_LENGTH                         = 5;
     static std::vector<OpSequenceMatchEntry> s_OperatorSequenceMatchInfo = {
-        {L"<..<=", TokenType::ASSIGN_LSL_RESIZE},
-        {L">..>=", TokenType::ASSIGN_LSR_RESIZE},
-        {L"<..<", TokenType::LSL_RESIZE},
-        {L">..>", TokenType::LSR_RESIZE},
-        {L"<<<=", TokenType::ASSIGN_ROL},
-        {L">>>=", TokenType::ASSIGN_ROR},
-        {L"<<<", TokenType::ROL},
-        {L">>>", TokenType::ROR},
-        {L"<<=", TokenType::ASSIGN_LSL},
-        {L">>=", TokenType::ASSIGN_LSR},
-        {L"&&", TokenType::BOOL_AND},
-        {L"||", TokenType::BOOL_OR},
-        {L"::", TokenType::RESOLVE},
-        {L"+=", TokenType::ASSIGN_ADD},
-        {L"-=", TokenType::ASSIGN_SUB},
-        {L"*=", TokenType::ASSIGN_MUL},
-        {L"/=", TokenType::ASSIGN_DIV},
-        {L"&=", TokenType::ASSIGN_AND},
-        {L"|=", TokenType::ASSIGN_OR},
-        {L"^=", TokenType::ASSIGN_XOR},
-        {L"..", TokenType::RANGE},
-        {L"++", TokenType::INC},
-        {L"--", TokenType::DEC},
-        {L"==", TokenType::EQUAL},
-        {L"!=", TokenType::NOT_EQUAL},
-        {L">=", TokenType::GTEQ},
-        {L"<=", TokenType::LTEQ},
-        {L"<<", TokenType::LSL},
-        {L">>", TokenType::LSR},
+        // TODO: come up with better crackhead syntax for this
+        // {L"<..<=", TokenType::ASSIGN_LSL_RESIZE},
+        // {L">..>=", TokenType::ASSIGN_LSR_RESIZE},
+        // {L"<..<", TokenType::LSL_RESIZE},
+        // {L">..>", TokenType::LSR_RESIZE},
+        {L"<<<=", TokenType::ASSIGN_ROL}, ////
+        {L">>>=", TokenType::ASSIGN_ROR}, //
+        {L"<<<", TokenType::ROL},         //
+        {L">>>", TokenType::ROR},         //
+        {L"<<=", TokenType::ASSIGN_LSL},  //
+        {L">>=", TokenType::ASSIGN_LSR},  //
+        {L"&&", TokenType::BOOL_AND},     //
+        {L"||", TokenType::BOOL_OR},      //
+        {L"::", TokenType::RESOLVE},      //
+        {L"+=", TokenType::ASSIGN_ADD},   //
+        {L"-=", TokenType::ASSIGN_SUB},   //
+        {L"*=", TokenType::ASSIGN_MUL},   //
+        {L"/=", TokenType::ASSIGN_DIV},   //
+        {L"&=", TokenType::ASSIGN_AND},   //
+        {L"|=", TokenType::ASSIGN_OR},    //
+        {L"^=", TokenType::ASSIGN_XOR},   //
+        {L"..", TokenType::RANGE},        //
+        {L"++", TokenType::INC},          //
+        {L"--", TokenType::DEC},          //
+        {L"==", TokenType::EQUAL},        //
+        {L"!=", TokenType::NOT_EQUAL},    //
+        {L">=", TokenType::GTEQ},         //
+        {L"<=", TokenType::LTEQ},         //
+        {L"<<", TokenType::LSL},          //
+        {L">>", TokenType::LSR},          //
     };
     //////////////////////////////////////////////////////////////////////////////////////
 
@@ -68,27 +69,29 @@ namespace XRT {
     new InvalidPunctuatorSequence(tok, extended_value)
 
     void Parser::Parse(Lexer* lex) {
-        TokenType stack_SinglePunctuatorMap[256];
-        memset(stack_SinglePunctuatorMap, 0, sizeof(stack_SinglePunctuatorMap));
-        stack_SinglePunctuatorMap[(int)'.'] = TokenType::DOT;
-        stack_SinglePunctuatorMap[(int)';'] = TokenType::SEPARATOR;
-        stack_SinglePunctuatorMap[(int)'<'] = TokenType::OPEN_ANGLE;
-        stack_SinglePunctuatorMap[(int)'>'] = TokenType::CLOSE_ANGLE;
-        stack_SinglePunctuatorMap[(int)'['] = TokenType::OPEN_BRACKET;
-        stack_SinglePunctuatorMap[(int)']'] = TokenType::CLOSE_BRACKET;
-        stack_SinglePunctuatorMap[(int)'('] = TokenType::OPEN_PAREN;
-        stack_SinglePunctuatorMap[(int)')'] = TokenType::CLOSE_PAREN;
-        stack_SinglePunctuatorMap[(int)'{'] = TokenType::OPEN_SCOPE;
-        stack_SinglePunctuatorMap[(int)'}'] = TokenType::CLOSE_SCOPE;
-        stack_SinglePunctuatorMap[(int)'!'] = TokenType::NOT;
-        stack_SinglePunctuatorMap[(int)'+'] = TokenType::ADD;
-        stack_SinglePunctuatorMap[(int)'-'] = TokenType::SUB;
-        stack_SinglePunctuatorMap[(int)'*'] = TokenType::MUL;
-        stack_SinglePunctuatorMap[(int)'/'] = TokenType::DIV;
-        stack_SinglePunctuatorMap[(int)'^'] = TokenType::XOR;
-        stack_SinglePunctuatorMap[(int)'&'] = TokenType::AND;
-        stack_SinglePunctuatorMap[(int)'|'] = TokenType::OR;
-        stack_SinglePunctuatorMap[(int)'='] = TokenType::ASSIGN;
+        TokenType singlePunctuatorMap[256];
+        memset(singlePunctuatorMap, 0, sizeof(singlePunctuatorMap));
+        singlePunctuatorMap[static_cast<int>('.')] = TokenType::DOT;
+        singlePunctuatorMap[static_cast<int>(';')] = TokenType::SEPARATOR;
+        singlePunctuatorMap[static_cast<int>('<')] = TokenType::OPEN_ANGLE;
+        singlePunctuatorMap[static_cast<int>('>')] = TokenType::CLOSE_ANGLE;
+        singlePunctuatorMap[static_cast<int>('[')] = TokenType::OPEN_BRACKET;
+        singlePunctuatorMap[static_cast<int>(']')] = TokenType::CLOSE_BRACKET;
+        singlePunctuatorMap[static_cast<int>('(')] = TokenType::OPEN_PAREN;
+        singlePunctuatorMap[static_cast<int>(')')] = TokenType::CLOSE_PAREN;
+        singlePunctuatorMap[static_cast<int>('{')] = TokenType::OPEN_SCOPE;
+        singlePunctuatorMap[static_cast<int>('}')] = TokenType::CLOSE_SCOPE;
+        singlePunctuatorMap[static_cast<int>('!')] = TokenType::NOT;
+        singlePunctuatorMap[static_cast<int>('+')] = TokenType::ADD;
+        singlePunctuatorMap[static_cast<int>('-')] = TokenType::SUB;
+        singlePunctuatorMap[static_cast<int>('*')] = TokenType::MUL;
+        singlePunctuatorMap[static_cast<int>('/')] = TokenType::DIV;
+        singlePunctuatorMap[static_cast<int>('^')] = TokenType::XOR;
+        singlePunctuatorMap[static_cast<int>('&')] = TokenType::AND;
+        singlePunctuatorMap[static_cast<int>('|')] = TokenType::OR;
+        singlePunctuatorMap[static_cast<int>('=')] = TokenType::ASSIGN;
+        singlePunctuatorMap[static_cast<int>('?')] = TokenType::TERNARY_IF;
+        singlePunctuatorMap[static_cast<int>(':')] = TokenType::TERNARY_ELSE;
 
         ScopeExecTime xt("Parser::Parse");
 
@@ -102,7 +105,7 @@ namespace XRT {
         specPassTokens.reserve(tokens.size());
 
         PARSER_LOG_TRACE(" - Punctuator specification pass");
-        for (int i = 0; i < (int)tokens.size(); i++) {
+        for (size_t i = 0; i < tokens.size(); i++) {
             auto tok = tokens[i];
             if (tok->type == TokenType::PUNCTUATOR) {
                 std::wstring_view extended_value{tok->value.data(), MAX_OP_SEQUENCE_LENGTH};
@@ -120,7 +123,7 @@ namespace XRT {
                         tok->value = std::wstring_view{extended_value.data(), e.value.size()};
                         tok->type  = e.resulting_token;
                         specPassTokens.push_back(tok);
-                        i += (int)e.value.size() - 1;
+                        i += e.value.size() - 1;
                         added = true;
                         break;
                     }
@@ -133,8 +136,7 @@ namespace XRT {
         break;                 \
     }
 
-                    uint8_t val_u8 = (char)tok->value.data()[0];
-                    tok->type      = stack_SinglePunctuatorMap[val_u8];
+                    tok->type = singlePunctuatorMap[static_cast<uint8_t>(tok->value.data()[0])];
 
                     if (tok->type == TokenType::UNKNOWN) {
                         new InvalidPunctuatorSequence(tok, tok->value);

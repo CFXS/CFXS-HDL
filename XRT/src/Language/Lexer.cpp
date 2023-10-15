@@ -98,9 +98,10 @@ namespace XRT {
                 auto c = content[i];
 
                 if (it_token != m_Tokens.end()) {
-                    if ((*it_token)->offset == i) {
-                        (*it_token)->line   = line;
-                        (*it_token)->column = column;
+                    auto tok = *it_token;
+                    if (tok->offset == i) {
+                        tok->line   = line;
+                        tok->column = column;
                         it_token++;
                     }
                 } else {
