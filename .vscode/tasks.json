@@ -1,0 +1,14 @@
+{
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "problemMatcher":"$gcc",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "command": "/usr/bin/cmake --build /home/cfxs/Documents/Projects/CFXS/CFXS-HDL/build --config Release --target all -j 8 --",
+        }
+    ]
+}

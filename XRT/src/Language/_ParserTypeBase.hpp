@@ -53,14 +53,23 @@ namespace XRT {
 
         class NotImplemented : public ParseException {
         public:
-            NotImplemented(const std::string& reason) : m_Reason("Not Implemented: " + reason) {
+            NotImplemented(const std::string& reason, const Token* current_token) :
+                m_Token(current_token), m_Reason("Not Implemented: " + reason) {
             }
 
             const char* what() const noexcept override {
                 return m_Reason.c_str();
             }
 
+            size_t GetLine() const override {
+                return m_Token->line;
+            }
+            size_t GetColumn() const override {
+                return m_Token->column;
+            }
+
         private:
+            const Token* m_Token;
             std::string m_Reason;
         };
 

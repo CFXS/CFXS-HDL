@@ -141,8 +141,9 @@ namespace XRT {
         size_t token_index = 0;
         auto current_token = m_Tokens[token_index];
 
-#define LOOKAHEAD(idx, expected_type)                                                                                          \
+#define LOOKAHEAD(l_idx, expected_type)                                                                                        \
     [&]() constexpr -> const Token* {                                                                                          \
+        size_t idx = l_idx;                                                                                                    \
         if ((idx + token_index) >= m_Tokens.size())                                                                            \
             throw ParseOverflow(std::string("Lookahead [+") + std::to_string(idx) + std::string("] overflow"), current_token); \
         const auto tok = m_Tokens[idx + token_index];                                                                          \
@@ -157,8 +158,9 @@ namespace XRT {
             size_t inc_tokens = 1;
 
             switch (current_token->type) {
+                case TT::COMMENT: break;
                 case TT::PREPROCESSOR: {
-                    const auto action = LOOKAHEAD(1, TT::KEYWORD);
+                    const auto action = LOOKAHEAD(1, TT::IDENTIFIER);
                     inc_tokens++;
 
                     if (action->value == L"include") {
@@ -168,7 +170,7 @@ namespace XRT {
                         m_AST->Append(CreateScope<AST_Element::SourceLink>(path->value));
 
                     } else if (action->value == L"define") {
-                        throw NotImplemented("#define");
+                        throw NotImplemented("#define", action);
                     } else {
                         throw InvalidPreprocessorDirective("Unknown preprocessing directive", action);
                     }
@@ -178,20 +180,53 @@ namespace XRT {
 
                 case TT::KEYWORD: {
                     if (current_token->value == L"namespace") {
-                        const auto next = LOOKAHEAD(1, TT::UNKNOWN);
-                        if (next->type != TT::IDENTIFIER) {
-                            throw ExpectationError(fmt::format("Expected IDENTFIER got {}", ToString(next->type)), next);
+                        const auto first = LOOKAHEAD(1, TT::UNKNOWN);
+                        inc_tokens++;
+                        if (first->type != TT::IDENTIFIER) {
+                            throw ExpectationError(fmt::format("Expected IDENTFIER got {}", ToString(first->type)), first);
                         }
+
+                        std::wstring ns_name{first->value};
+                        size_t lookahead_index = 2;
+                        bool accept_resolve    = true;
+
+                        while (1 < 2) {
+                            const auto next = LOOKAHEAD(lookahead_index++, TT::UNKNOWN);
+                            inc_tokens++;
+                            if (next->type == TT::OPEN_SCOPE) {
+                                lookahead_index--;
+                                inc_tokens--;
+                                if (accept_resolve == false) {
+                                    // namespace ends with "::"
+                                    throw ExpectationError(fmt::format("Expected IDENTIFIER got OPEN_SCOPE"), next);
+                                }
+                                break;
+                            }
+                            if (accept_resolve && next->type != TT::RESOLVE) {
+                                throw ExpectationError(fmt::format("Expected RESOLVE got {}", ToString(next->type)), next);
+                            }
+                            if (!accept_resolve && next->type != TT::IDENTIFIER) {
+                                throw ExpectationError(fmt::format("Expected IDENTIFIER got {}", ToString(next->type)), next);
+                            }
+
+                            ns_name += next->value;
+                            accept_resolve = !accept_resolve;
+                        }
+
+                        LOOKAHEAD(lookahead_index, TT::OPEN_SCOPE);
                         inc_tokens++;
 
-                        const auto paren = LOOKAHEAD(2, TT::OPEN_SCOPE);
-                        inc_tokens++;
-
-                        m_AST->Append(CreateScope<AST_Element::Namespace>(next->value));
+                        m_AST->EnterScope();
+                        m_AST->Append(CreateScope<AST_Element::Namespace>(ns_name));
 
                     } else {
-                        throw NotImplemented("keyword [" + StringUtils::utf16_to_utf8(current_token->value) + "]");
+                        throw NotImplemented("keyword [" + StringUtils::utf16_to_utf8(current_token->value) + "]", current_token);
                     }
+                    break;
+                }
+
+                case TT::CLOSE_SCOPE: {
+                    m_AST->ExitScope();
                     break;
                 }
 

@@ -13,6 +13,8 @@ namespace XRT {
         NAMESPACE,
         SCOPE,
         EXPRESSION,
+        SCOPE_START,
+        SCOPE_END,
     };
 
     static inline const char* AST_Type_ToString(AST_Type type) {
@@ -21,6 +23,8 @@ namespace XRT {
             case AST_Type::NAMESPACE: return "NAMESPACE";
             case AST_Type::SCOPE: return "SCOPE";
             case AST_Type::EXPRESSION: return "EXPRESSION";
+            case AST_Type::SCOPE_START: return "SCOPE_START";
+            case AST_Type::SCOPE_END: return "SCOPE_END";
             default: return "???";
         }
     }
@@ -46,9 +50,19 @@ namespace XRT {
         };
 
         struct Namespace : public AST_Entry {
-            Namespace(const std::wstring_view& ns) : AST_Entry(AST_Type::NAMESPACE), name(ns) {
+            Namespace(const std::wstring& ns) : AST_Entry(AST_Type::NAMESPACE), name(ns) {
             }
-            std::wstring_view name;
+            std::wstring name;
+        };
+
+        struct ScopeStart : public AST_Entry {
+            ScopeStart() : AST_Entry(AST_Type::SCOPE_START) {
+            }
+        };
+
+        struct ScopeEnd : public AST_Entry {
+            ScopeEnd() : AST_Entry(AST_Type::SCOPE_END) {
+            }
         };
     }; // namespace AST_Element
 
@@ -60,20 +74,52 @@ namespace XRT {
             m_Entries.emplace_back(std::move(el));
         }
 
+        void EnterScope() {
+            m_Entries.emplace_back(CreateScope<AST_Element::ScopeStart>());
+        }
+
+        void ExitScope() {
+            m_Entries.emplace_back(CreateScope<AST_Element::ScopeEnd>());
+        }
+
         void Print() const {
             LOG_DEBUG("AST:");
+
+            int scope_depth             = 0;
+            static constexpr int INDENT = 4;
+
+            auto str_indent = [](int len) {
+                std::string s;
+                for (int i = 0; i < len; i++) {
+                    s.append(" ");
+                }
+                return s;
+            };
+
             for (auto& e : m_Entries) {
-                LOG_DEBUG("[{}]", AST_Type_ToString(e->type));
+                if (e->type == AST_Type::SCOPE_END) {
+                    scope_depth--;
+                }
+
+                LOG_TRACE("{}[{}]", str_indent(scope_depth * INDENT), AST_Type_ToString(e->type));
                 switch (e->type) {
                     case AST_Type::SOURCE_LINK: {
-                        LOG_DEBUG("    - {}", StringUtils::utf16_to_utf8(e->Cast<AST_Element::SourceLink>().source_path));
+                        LOG_DEBUG("{}path: {}",
+                                  str_indent(scope_depth * INDENT),
+                                  StringUtils::utf16_to_utf8(e->Cast<AST_Element::SourceLink>().source_path));
                         break;
                     }
                     case AST_Type::NAMESPACE: {
-                        LOG_DEBUG("    - {}", StringUtils::utf16_to_utf8(e->Cast<AST_Element::Namespace>().name));
+                        LOG_DEBUG("{}name: {}",
+                                  str_indent(scope_depth * INDENT),
+                                  StringUtils::utf16_to_utf8(e->Cast<AST_Element::Namespace>().name));
                         break;
                     }
                     default: break;
+                }
+
+                if (e->type == AST_Type::SCOPE_START) {
+                    scope_depth++;
                 }
             }
         }

@@ -55,4 +55,6 @@ endif()
 
 if(WIN32)
   string(REGEX REPLACE "/W[3|4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+else()
+  target_compile_options(${EXE_NAME} PUBLIC -fdiagnostics-color=always -Wno-deprecated-copy)
 endif()

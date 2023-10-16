@@ -14,7 +14,7 @@ public:
         auto now = std::chrono::high_resolution_clock::now();
         LOG_DEBUG("[ScopeTime] \"{}\" {:.3f}ms",
                   m_Label,
-                  std::chrono::duration_cast<std::chrono::nanoseconds>(now - m_TimePoint).count() / 1000000.0f);
+                  static_cast<float>(std::chrono::duration_cast<std::chrono::nanoseconds>(now - m_TimePoint).count()) / 1000000.0f);
     }
 
 private:

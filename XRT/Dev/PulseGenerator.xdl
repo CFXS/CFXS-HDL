@@ -1,12 +1,18 @@
 #include "std/*"
 
 namespace CFXS {
+    namespace NS2 {}
+} // namespace CFXS
 
-    template<logic IDLE_OUTPUT,         // Idle output state - pulse state is inverted IDLE_OUTPUT
-             unsigned PULSE_LENGTH,     // Length of a pulse in clock cycles
-             bool CLOCK_EDGE   = true,  // Process clock edge
-             bool TRIGGER_EDGE = true,  // Default trigger on transition from 0 to 1
-             bool BOTH_EDGES   = false, // Generate pulse on both trigger edges
+namespace CFXS::NS2 {}
+
+namespace CFXS {
+
+    template<logic IDLE_OUTPUT,        // Idle output state - pulse state is inverted IDLE_OUTPUT
+             unsigned PULSE_LENGTH,    // Length of a pulse in clock cycles
+             bool CLOCK_EDGE   = true, // Process clock edge
+             bool TRIGGER_EDGE = true, // Default trigger on transition from 0 to 1
+             bool BOTH_EDGES   = false // Generate pulse on both trigger edges
              >
     component PulseGenerator : std::clockable {
     registers:
@@ -18,7 +24,7 @@ namespace CFXS {
             output = reg_Counter == 0 ? IDLE_OUTPUT : !IDLE_OUTPUT;
         }
 
-        Event<all>(EventSource e) {
+        Event<auto>(EventSource e) {
             if (trigger != reg_LastTrigger) {
                 if (BOTH_EDGES == true || trigger == TRIGGER_EDGE) {
                     reg_Counter = PULSE_LENGTH;

@@ -23,7 +23,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/XRT/XRT",
             "args": [
-                "\"${workspaceFolder}/XRT/Dev/*.xdl\"",
+                "\"${workspaceFolder}/XRT/Dev/Pulse*.xdl\"",
                 // "\"${workspaceFolder}/XRT/Dev/*.xdl\"",
                 // "\"${workspaceFolder}/XRT/src/libXRT/*.xdl\"",
                 // "\"${workspaceFolder}/XRT/src/libXRT/std.is_integral.xdl\"",

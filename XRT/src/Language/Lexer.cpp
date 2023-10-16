@@ -18,7 +18,7 @@
 #define REGEX_NUMBER_LITERAL    "[0-9][a-fA-FxX_0-9]*"
 #define REGEX_STRING            "\"([^\"\\\\]|\\\\.)*\"" // TODO: Modify regex to not match broken multiline strings
 #define REGEX_KEYWORD \
-    "all|namespace|component|abstract|registers|implementation|extern|static_assert|in|out|inout|if|else|for|template|typename|include|using|range|length"
+    "auto|namespace|component|abstract|registers|implementation|extern|static_assert|in|out|inout|if|else|for|template|typename|using|range|length"
 
 // do not add whitespace to token vector
 #define CREATE_TOKEN(type, value)                                           \
