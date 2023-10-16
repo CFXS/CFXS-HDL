@@ -12,7 +12,7 @@ public:
     }
     ~ScopeExecTime() {
         auto now = std::chrono::high_resolution_clock::now();
-        LOG_TRACE("[ScopeExecTime] \"{}\" {:.3f}ms",
+        LOG_DEBUG("[ScopeTime] \"{}\" {:.3f}ms",
                   m_Label,
                   std::chrono::duration_cast<std::chrono::nanoseconds>(now - m_TimePoint).count() / 1000000.0f);
     }

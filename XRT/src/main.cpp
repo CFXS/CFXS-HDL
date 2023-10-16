@@ -11,6 +11,7 @@
 #include <regex>
 #include <Log/ANSI.hpp>
 #include <regex/ctre.hpp>
+#include <Utils.hpp>
 
 using argparse::ArgumentParser;
 namespace fs = std::filesystem;
@@ -19,7 +20,7 @@ void Test(const std::string& source, const std::filesystem::path& sourcePath);
 
 int main(int argc, char** argv) {
     Logger::Initialize();
-    LOG_TRACE("CFXS XRT");
+    LOG_INFO(CFXS_PROGRAM_NAME);
 
     std::vector<fs::path> files_to_process;
 
@@ -46,8 +47,8 @@ int main(int argc, char** argv) {
             auto name = fp.filename();
             auto dir  = fp.parent_path();
 
-            bool is_xrt_file = ctre::match<L"\\.xrt", ctre::case_insensitive>(ext.c_str());
-            if (is_xrt_file) {
+            bool is_cfxs_hdl_source = ctre::match<L"\\.xdl", ctre::case_insensitive>(ext.c_str());
+            if (is_cfxs_hdl_source) {
                 bool is_wildcard = ctre::search<L"\\*">(name.c_str());
                 if (is_wildcard) {
                     if (fs::is_directory(dir) && fs::exists(dir)) {
@@ -105,29 +106,30 @@ int main(int argc, char** argv) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Test(const std::string& source, const std::filesystem::path& sourcePath) {
-    auto src = std::make_shared<XRT::SourceEntry>(StringUtils::utf8_to_utf16(source), sourcePath);
-
-    auto lex = new XRT::Lexer(src);
+    const auto source_entry = CreateRef<XRT::SourceEntry>(StringUtils::utf8_to_utf16(source), sourcePath);
+    auto lexer              = CreateScope<XRT::Lexer>(source_entry);
 
     try {
-        lex->ProcessSource();
+        lexer->ProcessSource();
     } catch (const XRT::Lexer::UnknownTokenException& e) {
         LOG_ERROR("[{}]:\n{}", e.what(), e.GetSource());
     } catch (const std::exception& e) {
         LOG_CRITICAL("{}", e.what());
     }
 
-    auto parser = new XRT::Parser;
+    auto parser = CreateScope<XRT::Parser>();
     try {
-        parser->Parse(lex);
+        parser->Parse(lexer);
     } catch (const XRT::Parser::ParseException& e) {
         LOG_ERROR("{}", e.what());
+        LOG_TRACE("At \"{}:{}:{}\"", source_entry->GetPath(), e.GetLine(), e.GetColumn());
     } catch (const std::exception& e) {
         LOG_CRITICAL("{}", e.what());
     }
 
-    auto& tokens     = parser->GetTokens();
-    lex->GetTokens() = tokens;
+    parser->PrintAST();
+
+    auto& tokens = parser->GetTokens();
     // lex->PrintTokens();
 
     return;

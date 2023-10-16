@@ -38,6 +38,7 @@ private:
 };
 
 // Core log macros
+#define LOG_DEBUG(...)    ::Logger::GetCoreLogger()->debug(__VA_ARGS__)
 #define LOG_TRACE(...)    ::Logger::GetCoreLogger()->trace(__VA_ARGS__)
 #define LOG_INFO(...)     ::Logger::GetCoreLogger()->info(__VA_ARGS__)
 #define LOG_WARN(...)     ::Logger::GetCoreLogger()->warn(__VA_ARGS__)

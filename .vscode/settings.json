@@ -18,7 +18,7 @@
     "files.associations": {
         "*.ui": "xml",
         "*.qrc": "xml",
-        "*.xrt": "cpp",
+        "*.xdl": "cpp",
         "memory": "cpp",
         "iosfwd": "cpp",
         "fstream": "cpp",

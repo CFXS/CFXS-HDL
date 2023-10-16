@@ -1,4 +1,5 @@
 #include "StringUtils.hpp"
+#include <stdexcept>
 
 #ifdef _WIN32
     #include <windows.h>

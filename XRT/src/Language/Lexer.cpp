@@ -2,6 +2,7 @@
 #include <memory>
 #include <string_view>
 #include "Language/Lexer.hpp"
+#include "Language/Token.hpp"
 #include "Language/_LexerTypeBase.hpp"
 #include "Log/Logger.hpp"
 #include "ScopeExecTime.hpp"
@@ -19,7 +20,13 @@
 #define REGEX_KEYWORD \
     "all|namespace|component|abstract|registers|implementation|extern|static_assert|in|out|inout|if|else|for|template|typename|include|using|range|length"
 
-#define CREATE_TOKEN(type, value) m_Tokens.emplace_back(new Token(type, value, currentOffset, 0, 0));
+// do not add whitespace to token vector
+#define CREATE_TOKEN(type, value)                                           \
+    if (type != TokenType::SPACE) {                                         \
+        m_Tokens.emplace_back(new Token(type, value, currentOffset, 0, 0)); \
+    }
+
+// regex match type/regex and create token
 #define CHECK_MATCH(type, rx)                                                                                                \
     for (auto match : ctre::multiline_tokenize<rx>(sourceContent)) {                                                         \
         if (match) {                                                                                                         \
@@ -118,7 +125,7 @@ namespace XRT {
 
             // Later lookahead padding
             for (int i = 0; i < 16; i++)
-                m_Tokens.push_back(new Token(TokenType::END_OF_FILE, {}, content.size(), line, column));
+                m_Tokens.emplace_back(new Token(TokenType::END_OF_FILE, {}, content.size(), line, column));
         }
     }
 

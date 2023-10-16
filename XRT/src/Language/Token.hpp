@@ -18,8 +18,10 @@ namespace XRT {
         HEX_LITERAL,      // 0x1234
         FLOAT_LITERAL,    // 1.234
         TIME_LITERAL,     // 12ns
+        PREPROCESSOR,     // #
         ASSIGN,           // =
         DOT,              // .
+        COMMA,            // ,
         SEPARATOR,        // ;
         OPEN_ANGLE,       // <
         CLOSE_ANGLE,      // >
@@ -86,15 +88,15 @@ namespace XRT {
 
         void Print(const std::filesystem::path& path);
 
-        static void* tok_malloc(size_t size);
-        static void tok_free(void* ptr);
+        // static void* tok_malloc(size_t size);
+        // static void tok_free(void* ptr);
 
-        void* operator new(size_t size) {
-            return tok_malloc(size);
-        }
-        void operator delete(void* p) {
-            tok_free(p);
-        }
+        // void* operator new(size_t size) {
+        //     return tok_malloc(size);
+        // }
+        // void operator delete(void* p) {
+        //     tok_free(p);
+        // }
     };
 
 } // namespace XRT
@@ -151,6 +153,9 @@ inline std::string ToString(XRT::TokenType t) {
         case XRT::TokenType::LSR: return "LSR";
         case XRT::TokenType::ROL: return "ROL";
         case XRT::TokenType::ROR: return "ROR";
+        case XRT::TokenType::DOT: return "DOT";
+        case XRT::TokenType::COMMA: return "COMMA";
+        case XRT::TokenType::PREPROCESSOR: return "PREPROCESSOR";
         // case XRT::TokenType::LSL_RESIZE: return "LSL_RESIZE";
         // case XRT::TokenType::LSR_RESIZE: return "LSR_RESIZE";
         case XRT::TokenType::ASSIGN_LSL: return "ASSIGN_LSL";

@@ -1,7 +1,12 @@
 #include "Parser.hpp"
 #include <string_view>
+#include "Language/AST.hpp"
 #include "Language/Token.hpp"
 #include "ScopeExecTime.hpp"
+
+#include "ParserTables.hpp"
+#include "StringUtils.hpp"
+#include "Utils.hpp"
 
 #ifdef DEBUG
     #define PARSER_LOG_TRACE(...) LOG_TRACE(__VA_ARGS__)
@@ -62,37 +67,13 @@ namespace XRT {
         if (extended_value == e.value) {                  \
             tok->type  = e.resulting_token;               \
             tok->value = extended_value;                  \
-            specPassTokens.push_back(tok);                \
+            specPassTokens.emplace_back(tok);             \
             break;                                        \
         }                                                 \
     }                                                     \
-    new InvalidPunctuatorSequence(tok, extended_value)
+    new InvalidPunctuatorSequence(tok)
 
-    void Parser::Parse(Lexer* lex) {
-        TokenType singlePunctuatorMap[256];
-        memset(singlePunctuatorMap, 0, sizeof(singlePunctuatorMap));
-        singlePunctuatorMap[static_cast<int>('.')] = TokenType::DOT;
-        singlePunctuatorMap[static_cast<int>(';')] = TokenType::SEPARATOR;
-        singlePunctuatorMap[static_cast<int>('<')] = TokenType::OPEN_ANGLE;
-        singlePunctuatorMap[static_cast<int>('>')] = TokenType::CLOSE_ANGLE;
-        singlePunctuatorMap[static_cast<int>('[')] = TokenType::OPEN_BRACKET;
-        singlePunctuatorMap[static_cast<int>(']')] = TokenType::CLOSE_BRACKET;
-        singlePunctuatorMap[static_cast<int>('(')] = TokenType::OPEN_PAREN;
-        singlePunctuatorMap[static_cast<int>(')')] = TokenType::CLOSE_PAREN;
-        singlePunctuatorMap[static_cast<int>('{')] = TokenType::OPEN_SCOPE;
-        singlePunctuatorMap[static_cast<int>('}')] = TokenType::CLOSE_SCOPE;
-        singlePunctuatorMap[static_cast<int>('!')] = TokenType::NOT;
-        singlePunctuatorMap[static_cast<int>('+')] = TokenType::ADD;
-        singlePunctuatorMap[static_cast<int>('-')] = TokenType::SUB;
-        singlePunctuatorMap[static_cast<int>('*')] = TokenType::MUL;
-        singlePunctuatorMap[static_cast<int>('/')] = TokenType::DIV;
-        singlePunctuatorMap[static_cast<int>('^')] = TokenType::XOR;
-        singlePunctuatorMap[static_cast<int>('&')] = TokenType::AND;
-        singlePunctuatorMap[static_cast<int>('|')] = TokenType::OR;
-        singlePunctuatorMap[static_cast<int>('=')] = TokenType::ASSIGN;
-        singlePunctuatorMap[static_cast<int>('?')] = TokenType::TERNARY_IF;
-        singlePunctuatorMap[static_cast<int>(':')] = TokenType::TERNARY_ELSE;
-
+    Parser::TokenStorage Parser::PreProcessOperators(LexData lex) {
         ScopeExecTime xt("Parser::Parse");
 
         PARSER_LOG_TRACE("Parse \"{}\"", lex->GetSource()->GetPath());
@@ -122,7 +103,7 @@ namespace XRT {
                     if (good) {
                         tok->value = std::wstring_view{extended_value.data(), e.value.size()};
                         tok->type  = e.resulting_token;
-                        specPassTokens.push_back(tok);
+                        specPassTokens.emplace_back(tok);
                         i += e.value.size() - 1;
                         added = true;
                         break;
@@ -130,33 +111,99 @@ namespace XRT {
                 }
 
                 if (!added) {
-#define MATCH_CHAR_CASE(ch, t) \
-    case ch: {                 \
-        tok->type = t;         \
-        break;                 \
-    }
-
-                    tok->type = singlePunctuatorMap[static_cast<uint8_t>(tok->value.data()[0])];
+                    tok->type = s_SinglePunctuatorMap[static_cast<uint8_t>(tok->value.data()[0])];
 
                     if (tok->type == TokenType::UNKNOWN) {
-                        new InvalidPunctuatorSequence(tok, tok->value);
+                        new InvalidPunctuatorSequence(tok);
                     }
 
-                    specPassTokens.push_back(tok);
+                    specPassTokens.emplace_back(tok);
                 }
             } else {
-                specPassTokens.push_back(tok);
+                specPassTokens.emplace_back(tok);
                 if (tok->type == TokenType::END_OF_FILE) {
                     break;
                 }
             }
         }
 
-        m_Tokens = specPassTokens;
+        return specPassTokens;
+    }
 
-        // for (auto& tok : m_Tokens) {
-        //     tok->Print(lex->GetSource()->GetPath());
-        // }
+    void Parser::Parse(LexData lex) {
+        using TT = TokenType;
+
+        const auto source_path = lex->GetSource()->GetPath();
+
+        m_AST    = CreateRef<AST>();
+        m_Tokens = PreProcessOperators(lex);
+
+        size_t token_index = 0;
+        auto current_token = m_Tokens[token_index];
+
+#define LOOKAHEAD(idx, expected_type)                                                                                          \
+    [&]() constexpr -> const Token* {                                                                                          \
+        if ((idx + token_index) >= m_Tokens.size())                                                                            \
+            throw ParseOverflow(std::string("Lookahead [+") + std::to_string(idx) + std::string("] overflow"), current_token); \
+        const auto tok = m_Tokens[idx + token_index];                                                                          \
+        if (expected_type != TokenType::UNKNOWN && tok->type != expected_type)                                                 \
+            throw ExpectationError(fmt::format("Expected {} got {}", ToString(expected_type), ToString(tok->type)), tok);      \
+        return tok;                                                                                                            \
+    }()
+
+        auto FORCE_END = Token(TT::END_OF_FILE, {}, 0, 0, 0);
+
+        while (current_token->type != TT::END_OF_FILE) {
+            size_t inc_tokens = 1;
+
+            switch (current_token->type) {
+                case TT::PREPROCESSOR: {
+                    const auto action = LOOKAHEAD(1, TT::KEYWORD);
+                    inc_tokens++;
+
+                    if (action->value == L"include") {
+                        const auto path = LOOKAHEAD(2, TT::STRING_LITERAL);
+                        inc_tokens++;
+
+                        m_AST->Append(CreateScope<AST_Element::SourceLink>(path->value));
+
+                    } else if (action->value == L"define") {
+                        throw NotImplemented("#define");
+                    } else {
+                        throw InvalidPreprocessorDirective("Unknown preprocessing directive", action);
+                    }
+
+                    break;
+                }
+
+                case TT::KEYWORD: {
+                    if (current_token->value == L"namespace") {
+                        const auto next = LOOKAHEAD(1, TT::UNKNOWN);
+                        if (next->type != TT::IDENTIFIER) {
+                            throw ExpectationError(fmt::format("Expected IDENTFIER got {}", ToString(next->type)), next);
+                        }
+                        inc_tokens++;
+
+                        const auto paren = LOOKAHEAD(2, TT::OPEN_SCOPE);
+                        inc_tokens++;
+
+                        m_AST->Append(CreateScope<AST_Element::Namespace>(next->value));
+
+                    } else {
+                        throw NotImplemented("keyword [" + StringUtils::utf16_to_utf8(current_token->value) + "]");
+                    }
+                    break;
+                }
+
+                default: {
+                    throw UnknownTokenException(current_token);
+                    current_token = &FORCE_END;
+                }
+            }
+
+            token_index += inc_tokens;
+            current_token = m_Tokens[token_index];
+        }
     }
 
 } // namespace XRT

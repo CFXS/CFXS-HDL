@@ -8,7 +8,7 @@ include("_Sources.cmake")
 add_compile_definitions("_CRT_SECURE_NO_WARNINGS")
 
 add_compile_definitions("CFXS_VERSION_STRING=\"v0.1-dev\"")
-add_compile_definitions("CFXS_PROGRAM_NAME=\"CFXS XRT\"")
+add_compile_definitions("CFXS_PROGRAM_NAME=\"CFXS HDL Compiler\"")
 
 add_executable(${EXE_NAME} ${sources})
 
@@ -54,5 +54,5 @@ if(BUILD_PROFILER)
 endif()
 
 if(WIN32)
-string(REGEX REPLACE "/W[3|4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  string(REGEX REPLACE "/W[3|4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 endif()

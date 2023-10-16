@@ -11,12 +11,12 @@ namespace XRT {
         LOG_TRACE(" - {}\"{}:{}:{}\"{}", ANSI_YELLOW, path, line, column, ANSI_RESET);
     }
 
-    static uint8_t s_TokenMemory[1024 * 1024 * 16];
-    static size_t s_TokenMemPos = 0;
-    void* XRT::Token::tok_malloc(size_t size) {
-        return reinterpret_cast<void*>(&s_TokenMemory[s_TokenMemPos += size]);
-    }
-    void XRT::Token::tok_free(void*) {
-    }
+    // static uint8_t s_TokenMemory[1024 * 1024 * 16];
+    // static size_t s_TokenMemPos = 0;
+    // void* XRT::Token::tok_malloc(size_t size) {
+    //     return reinterpret_cast<void*>(&s_TokenMemory[s_TokenMemPos += size]);
+    // }
+    // void XRT::Token::tok_free(void*) {
+    // }
 
 } // namespace XRT
